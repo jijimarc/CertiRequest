@@ -1,0 +1,224 @@
+/* Additional Enhanced Styles */
+
+/* Dashboard Enhancements */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--clean-white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .welcome-section h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--navy-blue);
+    margin-bottom: 0.5rem;
+  }
+  
+  .welcome-section p {
+    color: var(--gray-600);
+  }
+  
+  /* Enhanced Request Items */
+  .request-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 1px solid var(--gray-100);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    background: var(--clean-white);
+  }
+  
+  .request-item:hover {
+    border-color: var(--navy-blue);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .request-icon {
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--gray-50);
+    border-radius: var(--border-radius);
+  }
+  
+  /* Quick Actions */
+  .quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .quick-action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    color: var(--gray-700);
+  }
+  
+  .quick-action-btn:hover {
+    background: var(--navy-blue);
+    color: var(--clean-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .action-icon {
+    font-size: 1.5rem;
+  }
+  
+  .action-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  
+  /* Loading Screen */
+  .loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--navy-blue) 0%, var(--navy-blue-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  
+  .loading-content {
+    text-align: center;
+    color: var(--clean-white);
+  }
+  
+  .loading-logo .logo-placeholder {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+    margin: 0 auto 2rem;
+  }
+  
+  .loading-text h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .spinner-lg {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid var(--gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 2rem auto;
+  }
+  
+  /* Sidebar Enhancements */
+  .nav-badge {
+    background: var(--gold);
+    color: var(--navy-blue);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    margin-left: auto;
+  }
+  
+  .sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+  }
+  
+  .user-avatar-small {
+    width: 36px;
+    height: 36px;
+    background: var(--gold);
+    color: var(--navy-blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+  
+  .user-details {
+    flex: 1;
+  }
+  
+  .user-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--clean-white);
+  }
+  
+  .user-role {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .logout-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+  }
+  
+  .logout-btn:hover {
+    color: var(--clean-white);
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+  
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .empty-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 0.5rem;
+  }
+  
+  .empty-subtitle {
+    color: var(--gray-500);
+    margin-bottom: 2rem;
+  }

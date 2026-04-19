@@ -1,0 +1,6 @@
+{
+  "scope": "x_2001423_certireq",
+  "scopeId": "49db34960f188310b9d1c9c530d1b2b8",
+  "name": "Certirequest",
+  "tsconfigPath": "./src/server/tsconfig.json"
+}

@@ -1,0 +1,22 @@
+{
+    "name": "x-2001423-certirequest",
+    "version": "1.0.0",
+    "description": "[BUILD AGENT GENERATED]:  Document Request Portal application for Students and Alumni to request certificates and documents with modern responsive portal interface, dashboard analytics, and request tracking capabilities",
+    "license": "UNLICENSED",
+    "scripts": {
+        "build": "now-sdk build",
+        "deploy": "now-sdk install",
+        "transform": "now-sdk transform",
+        "types": "now-sdk dependencies"
+    },
+    "devDependencies": {
+        "@servicenow/sdk": "4.6.0",
+        "@servicenow/glide": "26.0.1",
+        "eslint": "8.50.0",
+        "@servicenow/eslint-plugin-sdk-app-plugin": "4.6.0"
+    },
+    "dependencies": {
+        "react": "18.2.0",
+        "react-dom": "18.2.0"
+    }
+}
