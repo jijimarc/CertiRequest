@@ -16,7 +16,8 @@ export class DocumentRequestService {
         method: "GET",
         headers: {
           "Accept": "application/json",
-          "X-UserToken": window.g_ck
+          "X-UserToken": window.g_ck,
+          "X-No-Response-Challenge": "true"
         },
       });
 

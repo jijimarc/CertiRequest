@@ -7,6 +7,19 @@
   <!-- Initialize globals and Include ServiceNow's required scripts -->
   <sdk:now-ux-globals></sdk:now-ux-globals>
 
+  <!-- Force current instance origin to stop cross-site prompts -->
+  <script>
+    window.NOW = window.NOW || {};
+    window.NOW.instance_url = window.location.origin;
+    window.g_ck = window.g_ck || ''; // Initialize placeholder if missing
+    
+    // Force CSS reload by adding a version
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'App.css?v=' + Date.now();
+    document.head.appendChild(link);
+  </script>
+
   <!-- Include your React entry point -->
   <script src="main.jsx" type="module"></script>
 </head>

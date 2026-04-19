@@ -32,27 +32,21 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
   };
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="card-title">New Document Request</h1>
-        <p className="text-gray-600">Submit a new request for official documents</p>
-      </div>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2 className="modal-title">New Document Request</h2>
+          <button className="modal-close" onClick={onClose}>&times;</button>
+        </div>
 
-      <div className="card" style={{ maxWidth: '600px', margin: '0 auto' }}>
-        <div className="card-content">
-          {error && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {error}
-            </div>
-          )}
-
+        <div className="modal-body">
           <form onSubmit={handleSubmit}>
-            {/* Request Details */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-4">Request Details</h3>
-              
-              <div className="form-group">
-                <label className="form-label">Document Type *</label>
+            <div className="form-grid">
+              {/* Document Type */}
+              <div className="form-group full-width">
+                <label className="form-label">
+                  <span className="input-icon">📄</span> Document Type *
+                </label>
                 <select
                   name="documentType"
                   value={formData.documentType}
@@ -69,8 +63,11 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
                 </select>
               </div>
 
+              {/* Urgency */}
               <div className="form-group">
-                <label className="form-label">Urgency Level *</label>
+                <label className="form-label">
+                  <span className="input-icon">⚡</span> Urgency Level *
+                </label>
                 <select
                   name="urgency"
                   value={formData.urgency}
@@ -83,20 +80,11 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
                 </select>
               </div>
 
+              {/* Delivery */}
               <div className="form-group">
-                <label className="form-label">Purpose *</label>
-                <textarea
-                  name="purpose"
-                  value={formData.purpose}
-                  onChange={handleInputChange}
-                  className="form-textarea"
-                  placeholder="Please describe the purpose for this document request..."
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Delivery Mode *</label>
+                <label className="form-label">
+                  <span className="input-icon">🚚</span> Delivery Mode *
+                </label>
                 <select
                   name="deliveryMode"
                   value={formData.deliveryMode}
@@ -108,9 +96,25 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
                   <option value="courier">Courier Delivery</option>
                 </select>
               </div>
+
+              {/* Purpose */}
+              <div className="form-group full-width">
+                <label className="form-label">
+                  <span className="input-icon">📝</span> Purpose of Request *
+                </label>
+                <textarea
+                  name="purpose"
+                  value={formData.purpose}
+                  onChange={handleInputChange}
+                  className="form-textarea"
+                  style={{ minHeight: '120px' }}
+                  placeholder="Tell us why you need this document (e.g., Job application, further studies)..."
+                  required
+                />
+              </div>
             </div>
 
-            <div className="flex justify-end gap-3">
+            <div className="modal-footer">
               <button
                 type="button"
                 className="btn btn-secondary"
@@ -122,8 +126,14 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
                 type="submit"
                 className="btn btn-primary"
                 disabled={loading}
+                style={{ minWidth: '160px' }}
               >
-                {loading ? 'Submitting...' : 'Submit Request'}
+                {loading ? (
+                  <>
+                    <span className="spinner" style={{ width: '16px', height: '16px', borderTopColor: '#fff', marginRight: '10px' }}></span>
+                    Processing...
+                  </>
+                ) : 'Submit Request'}
               </button>
             </div>
           </form>

@@ -29,7 +29,18 @@ function App() {
     const initializeApp = async () => {
       try {
         // Fetch current logged-in user details from ServiceNow
-        const userResponse = await fetch('/api/now/ui/userinfo');
+        const userResponse = await fetch('/api/now/ui/userinfo', {
+          headers: {
+            'X-No-Response-Challenge': 'true'
+          }
+        });
+        
+        // If we get a 401 Unauthorized, redirect to the real login page
+        if (userResponse.status === 401) {
+          window.location.href = '/login.do?sysparm_goto_url=' + encodeURIComponent(window.location.href);
+          return;
+        }
+
         if (userResponse.ok) {
           const userData = await userResponse.json();
           setUser({
@@ -51,10 +62,28 @@ function App() {
     initializeApp();
   }, []);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (showNewRequestModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [showNewRequestModal]);
+
   const loadRequests = async () => {
     try {
       // ServiceNow Table API endpoint
-      const response = await fetch('/api/now/table/x_2001423_certireq_document_request?sysparm_query=ORDERBYDESCsys_created_on');
+      const response = await fetch('/api/now/table/x_2001423_certireq_document_request?sysparm_query=ORDERBYDESCsys_created_on', {
+        headers: {
+          'X-No-Response-Challenge': 'true'
+        }
+      });
+      
+      if (response.status === 401) {
+        window.location.href = '/login.do?sysparm_goto_url=' + encodeURIComponent(window.location.href);
+        return;
+      }
       
       if (!response.ok) throw new Error('Failed to fetch from ServiceNow');
       
