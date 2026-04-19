@@ -1,9 +1,9 @@
 import React from 'react';
 
 const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
+  // We simply removed the 'new-request' object from this list
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊', badge: null },
-    { id: 'new-request', label: 'New Request', icon: '📄', badge: null },
     { id: 'my-requests', label: 'My Requests', icon: '📋', badge: requestCount > 0 ? requestCount.toString() : null },
     { id: 'track-request', label: 'Track Request', icon: '👁️', badge: null },
     { id: 'payments', label: 'Payments', icon: '💳', badge: null },

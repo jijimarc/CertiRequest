@@ -14,6 +14,7 @@ import LoadingScreen from './components/LoadingScreen';
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showNewRequestModal, setShowNewRequestModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
@@ -284,11 +285,13 @@ function App() {
         </div>
       </main>
 
-      {showNewRequestModal && (
-        <NewRequest
-          onClose={() => setShowNewRequestModal(false)}
-          onSubmit={handleNewRequest}
-          loading={loading}
+      {isModalOpen && (
+        <NewRequest 
+          onClose={() => setIsModalOpen(false)} 
+          onSubmit={(data) => {
+            console.log("Submitting to ServiceNow:", data);
+            setIsModalOpen(false); 
+          }}
         />
       )}
 
