@@ -12,7 +12,6 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh }) => {
       <div className="dashboard-header">
         <div className="welcome-section">
           <h2 className="welcome-title">Welcome back, {user?.name || 'Student'}! 👋</h2>
-          <p className="welcome-subtitle">Here's what's happening with your document requests</p>
         </div>
       </div>
 

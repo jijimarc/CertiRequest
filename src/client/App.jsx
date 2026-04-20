@@ -14,7 +14,6 @@ import LoadingScreen from './components/LoadingScreen';
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showNewRequestModal, setShowNewRequestModal] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
@@ -63,7 +62,6 @@ function App() {
     initializeApp();
   }, []);
 
-  // Lock body scroll when modal is open
   useEffect(() => {
     if (showNewRequestModal) {
       document.body.style.overflow = 'hidden';
@@ -285,13 +283,10 @@ function App() {
         </div>
       </main>
 
-      {isModalOpen && (
+      {showNewRequestModal && (
         <NewRequest 
-          onClose={() => setIsModalOpen(false)} 
-          onSubmit={(data) => {
-            console.log("Submitting to ServiceNow:", data);
-            setIsModalOpen(false); 
-          }}
+          onClose={() => setShowNewRequestModal(false)} 
+          onSubmit={handleNewRequest}
         />
       )}
 
