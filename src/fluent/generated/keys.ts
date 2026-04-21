@@ -5,6 +5,10 @@ declare global {
         namespace Internal {
             interface Keys extends KeysRegistry {
                 explicit: {
+                    '5f8755030f988310b9d1c9c530d1b2b5': {
+                        table: 'sys_ws_definition'
+                        id: '5f8755030f988310b9d1c9c530d1b2b5'
+                    }
                     'App.css': {
                         table: 'sys_ux_theme_asset'
                         id: '371ab407ff024d309e9762645c5c90db'
@@ -36,6 +40,11 @@ declare global {
                     'sample-request-5': {
                         table: 'x_2001423_certireq_document_request'
                         id: 'd55d5fe524d84ae1866476c3f3882063'
+                    }
+                    src_server_AIExtractor_js: {
+                        table: 'sys_module'
+                        id: '10f783bf937f433787e085cd4127ca95'
+                        deleted: true
                     }
                 }
                 composite: [

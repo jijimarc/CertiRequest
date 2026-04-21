@@ -127,8 +127,8 @@ function App() {
       
       // Prepare the payload for ServiceNow
       const payload = {
-        student_id: user.id,
-        student_name: user.name,
+        student_id: requestData.studentId || user.id,      
+        student_name: requestData.studentName || user.name,
         email: user.email,
         department: user.department,
         document_type: requestData.documentType,
