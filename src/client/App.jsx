@@ -8,10 +8,14 @@ import MyRequests from './components/MyRequests';
 import TrackRequest from './components/TrackRequest';
 import Payments from './components/Payments';
 import HelpSupport from './components/HelpSupport';
+import StaffDashboard from './components/StaffDashboard';
 import Toast from './components/Toast';
 import LoadingScreen from './components/LoadingScreen';
+import Register from './components/Register';
+import Login from './components/Login';
 
 function App() {
+  const [view, setView] = useState('login'); // 'login' | 'register' | 'app'
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showNewRequestModal, setShowNewRequestModal] = useState(false);
   const [requests, setRequests] = useState([]);
@@ -91,6 +95,8 @@ function App() {
       // Map ServiceNow fields to our React state format
       const mappedRequests = result.result.map(record => ({
         id: record.sys_id,
+        number: record.number || record.sys_id.substring(0, 8).toUpperCase(),
+        userName: record.student_name || 'Anonymous Student',
         documentType: record.document_type || 'Unknown Document',
         dateSubmitted: record.submitted_date || record.sys_created_on,
         status: record.status || 'pending',
@@ -184,9 +190,86 @@ function App() {
     }
   };
 
+  const handleRegister = async (registerData) => {
+    try {
+      setLoading(true);
+      
+      // Prepare the payload for ServiceNow Customer table
+      const payload = {
+        fullname: registerData.fullname,
+        email: registerData.email,
+        password: registerData.password,
+        contact_number: registerData.contact_number,
+        user_type: registerData.user_type,
+        student_id_number: registerData.student_id_number,
+        department: registerData.department,
+        program: registerData.program,
+        year_level: registerData.year_level,
+        is_regular: registerData.is_regular,
+        year_of_graduation: registerData.year_of_graduation,
+        personal_email: registerData.personal_email,
+        customer_status: 'active'
+      };
+
+      const response = await fetch('/api/now/table/x_2001423_certireq_customer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-UserToken': window.g_ck || ''
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) throw new Error('Registration Failed');
+
+      const result = await response.json();
+      
+      // AUTO-LOGIN: Set user state and switch to app view
+      setUser({
+        id: result.result.sys_id,
+        name: registerData.fullname,
+        email: registerData.email,
+        department: registerData.department || 'General',
+        avatar: null
+      });
+
+      setView('app');
+      showToast('Registration Successful! Welcome to CertiRequest.', 'success');
+      
+    } catch (error) {
+      console.error('Registration Error:', error);
+      showToast('Registration Error. Please try again.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const showToast = (message, type = 'info') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 4000);
+  };
+
+  const handleLogout = () => {
+    // Clear user session
+    setUser({
+      id: '',
+      name: '',
+      email: '',
+      department: '',
+      avatar: null
+    });
+    setView('login');
+    setActiveTab('dashboard');
+    setRequests([]);
+    showToast('Logged out successfully', 'success');
+  };
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+    setView('app');
+    loadRequests();
+    showToast('Welcome back, ' + userData.name + '!', 'success');
   };
 
   const getStats = () => {
@@ -213,6 +296,7 @@ function App() {
             onNewRequest={() => setShowNewRequestModal(true)}
             user={user}
             onRefresh={loadRequests}
+            onLogout={handleLogout}
           />
         );
       case 'my-requests':
@@ -223,6 +307,8 @@ function App() {
         return <Payments requests={requests} showToast={showToast} />;
       case 'help':
         return <HelpSupport />;
+      case 'staff-portal':
+        return <StaffDashboard requests={requests} />;
       default:
         return <Dashboard requests={requests} stats={getStats()} />;
     }
@@ -230,6 +316,14 @@ function App() {
 
   if (loading && requests.length === 0) {
     return <LoadingScreen />;
+  }
+
+  if (view === 'login') {
+    return <Login onLogin={handleLogin} onGoToRegister={() => setView('register')} />;
+  }
+
+  if (view === 'register') {
+    return <Register onRegister={handleRegister} onBackToLogin={() => setView('login')} />;
   }
 
   return (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh }) => {
+const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogout }) => {
   const [recentRequests, setRecentRequests] = useState([]);
 
   useEffect(() => {
@@ -152,6 +152,9 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh }) => {
                   <span className="profile-value">{user?.department || 'Computer Science'}</span>
                 </div>
               </div>
+              <button className="btn btn-logout" onClick={onLogout}>
+                🚪 Logout
+              </button>
             </div>
           </div>
         </div>
