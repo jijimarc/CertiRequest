@@ -7,6 +7,7 @@ const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
     { id: 'my-requests', label: 'My Requests', icon: '📋', badge: requestCount > 0 ? requestCount.toString() : null },
     { id: 'track-request', label: 'Track Request', icon: '👁️', badge: null },
     { id: 'payments', label: 'Payments', icon: '💳', badge: null },
+    { id: 'staff-portal', label: 'Staff Portal', icon: '👔', badge: null },
     { id: 'help', label: 'Help & Support', icon: '❓', badge: null },
   ];
 

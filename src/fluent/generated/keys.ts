@@ -50,6 +50,31 @@ declare global {
                 composite: [
                     {
                         table: 'sys_documentation'
+                        id: '01875e4eb79b48079f3c52c8ef5187b1'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'year_of_graduation'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '020b689de32244a38dac629b68465c50'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'user_type'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_db_object'
+                        id: '02dbe0c54ca24c83949100e840a511b8'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
                         id: '0467a218de25435da360368bb02b915b'
                         key: {
                             name: 'x_2001423_certireq_document_request'
@@ -122,10 +147,43 @@ declare global {
                     },
                     {
                         table: 'sys_dictionary'
+                        id: '19851f845f0e4405bda3048d7cad3af3'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'program'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
                         id: '1b835f5872e74287b3386081bbf91371'
                         key: {
                             name: 'x_2001423_certireq_document_request'
                             element: 'submitted_date'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '1d38128c9be54cae8a5b4881f2b4f0e9'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'contact_number'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '1efa543a15a74abf8dff7b73009b3fee'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'is_regular'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '1fcb72047a7f44e69e7c393242ff7146'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'email'
                         }
                     },
                     {
@@ -135,6 +193,14 @@ declare global {
                             name: 'x_2001423_certireq_document_request'
                             element: 'payment_required'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '255a7c1eac3f433ea10379eb6907a0ae'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'customer_status'
                         }
                     },
                     {
@@ -288,11 +354,28 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '3efcc12de5f642c980aa84e33f36e47b'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'NULL'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: '4476a8bc6f004758ac1cf5e9da3f771c'
                         key: {
                             name: 'x_2001423_certireq_document_request'
                             element: 'document_type'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '4921f0f781ad4d0e8bd8076766492029'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'year_level'
                         }
                     },
                     {
@@ -309,6 +392,40 @@ declare global {
                         key: {
                             name: 'x_2001423_certireq_document_request'
                             element: 'delivery_mode'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '4f530558b76e4d2193d0555c1bf63dac'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'password'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '543c5b2ba9ee4fb290706f7c1ccb2fd8'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'fullname'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '54fb3b1881f04a718dc98ee438bbe418'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'program'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '5631e4af19ec4dcda5803b9e646c0376'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'NULL'
                         }
                     },
                     {
@@ -335,6 +452,23 @@ declare global {
                             name: 'x_2001423_certireq_document_request'
                             element: 'payment_required'
                             value: 'paid'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '64e7faa0bc794de595d7159a71eb764c'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'contact_number'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '675567bdf7db413cab5ccea3e5189cbb'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'year_level'
+                            language: 'en'
                         }
                     },
                     {
@@ -377,6 +511,15 @@ declare global {
                             }
                             element: 'status'
                             position: '2'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: '6e28340e55bb4251acb88b28b2b385a4'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'user_type'
+                            value: 'student'
                         }
                     },
                     {
@@ -458,6 +601,14 @@ declare global {
                     },
                     {
                         table: 'sys_dictionary'
+                        id: '79a3000462f2417e9eedab7cec7e5119'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'department'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
                         id: '7c47dc8f57d443b9800ee3844da2fffc'
                         key: {
                             name: 'x_2001423_certireq_document_request'
@@ -491,6 +642,24 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '7fc413ad5da542339c7ee3391ab260d5'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'personal_email'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: '803c7dd8a9a54313aa9d6c461d964f85'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'is_regular'
+                            value: 'yes'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '82a58abf8d4c4f1eb60a6e38ca1be90a'
                         key: {
@@ -518,6 +687,15 @@ declare global {
                     },
                     {
                         table: 'sys_documentation'
+                        id: '8e9360b9d4d4485dbf4f0a7c88200b6e'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'department'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
                         id: '9055a1ce921844d3bf5de89ff637fdfb'
                         key: {
                             name: 'x_2001423_certireq_document_request'
@@ -535,11 +713,52 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_choice_set'
+                        id: '96e0a9f2c99d44f2be90c84291c80353'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'is_regular'
+                        }
+                    },
+                    {
+                        table: 'sys_choice_set'
+                        id: '97280e1c46ea4e0686673b744b9d45cf'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'user_type'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: '97a6cf6c936e4b1393f61cbd7a94af36'
                         key: {
                             name: 'x_2001423_certireq_document_request'
                             element: 'status'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '99517cbc880443dc8efe37e1ef51cb96'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'personal_email'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '997330352d104e28a0be0914833ee9dd'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'user_type'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '9c1ef306622a4d2abcc2f5a6d5c6df74'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'email'
                             language: 'en'
                         }
                     },
@@ -662,6 +881,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: 'b5a8fa930b2741a78fd177ab36718d78'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'student_id_number'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: 'b8b031c49a534d108afb6703468e560a'
                         key: {
@@ -739,6 +966,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: 'cba1fc47e8764292878d11d70b9a3e02'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'is_regular'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: 'cdaacbf559824c86a872d97758932749'
                         key: {
@@ -798,6 +1034,15 @@ declare global {
                     },
                     {
                         table: 'sys_documentation'
+                        id: 'd717c34e361d443bb0a7fe0034b9014c'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'customer_status'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
                         id: 'da78a1bb5bf5417c8b461f5707e37afa'
                         key: {
                             name: 'x_2001423_certireq_document_request'
@@ -824,6 +1069,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: 'ddcb2eaec85042249caf13985508652e'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'year_of_graduation'
+                        }
+                    },
+                    {
                         table: 'sys_ui_element'
                         id: 'e15451160f1c8310b9d1c9c530d1b2bc'
                         key: {
@@ -838,6 +1091,15 @@ declare global {
                             }
                             element: 'completion_date'
                             position: '4'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'e53994bd91f64a06a0db9f0496a6adc8'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'student_id_number'
+                            language: 'en'
                         }
                     },
                     {
@@ -927,6 +1189,22 @@ declare global {
                         }
                     },
                     {
+                        table: 'ua_table_licensing_config'
+                        id: 'f6a1ad4eea7f4b20bd939836a30b76a4'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'f7dc5c250b9e41b99d0bdfddb071d7e3'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'password'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_ui_element'
                         id: 'f95451160f1c8310b9d1c9c530d1b2de'
                         key: {
@@ -941,6 +1219,32 @@ declare global {
                             }
                             element: 'delivery_mode'
                             position: '18'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: 'f9d9ae44b7e64820817e5e4addb5fe1a'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'user_type'
+                            value: 'alumni'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: 'fc460d9b0c68413c9e8e11e725838950'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'is_regular'
+                            value: 'no'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'fd2fc31e83f24f788ca4641bd0b9e63a'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'fullname'
                         }
                     },
                     {
