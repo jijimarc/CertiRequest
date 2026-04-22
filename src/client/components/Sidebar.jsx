@@ -7,9 +7,18 @@ const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
     { id: 'my-requests', label: 'My Requests', icon: '📋', badge: requestCount > 0 ? requestCount.toString() : null },
     { id: 'track-request', label: 'Track Request', icon: '👁️', badge: null },
     { id: 'payments', label: 'Payments', icon: '💳', badge: null },
-    { id: 'staff-portal', label: 'Staff Portal', icon: '👔', badge: null },
     { id: 'help', label: 'Help & Support', icon: '❓', badge: null },
   ];
+
+  // Conditionally add Staff Portal for staff users
+  if (user?.role === 'staff') {
+    menuItems.splice(menuItems.length - 1, 0, { 
+      id: 'staff-portal', 
+      label: 'Staff Portal', 
+      icon: '🛠️', 
+      badge: null 
+    });
+  }
 
   return (
     <nav className="sidebar">
@@ -45,7 +54,7 @@ const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
           </div>
           <div className="user-details">
             <div className="user-name">{user?.name || 'User'}</div>
-            <div className="user-role">Student</div>
+            <div className="user-role" style={{ textTransform: 'capitalize' }}>{user?.role || 'Student'}</div>
           </div>
         </div>
         <button className="logout-btn">

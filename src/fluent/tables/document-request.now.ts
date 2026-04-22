@@ -1,29 +1,18 @@
 import '@servicenow/sdk/global';
-import { Table, StringColumn, DateTimeColumn, ChoiceColumn } from '@servicenow/sdk/core';
+import { Table, ReferenceColumn, StringColumn, DateTimeColumn, ChoiceColumn } from '@servicenow/sdk/core';
 
 export const x_2001423_certireq_document_request = Table({
   name: 'x_2001423_certireq_document_request',
   label: 'Document Request',
   schema: {
-    student_id: StringColumn({ 
-      label: 'Student ID', 
-      maxLength: 20,
-      mandatory: true 
+    // --- FOREIGN KEY LINKING TO THE UNIFIED CUSTOMER TABLE ---
+    customer: ReferenceColumn({
+      label: 'Customer',
+      referenceTable: 'x_2001423_certireq_customer',
+      mandatory: true
     }),
-    student_name: StringColumn({ 
-      label: 'Student Name', 
-      maxLength: 100,
-      mandatory: true 
-    }),
-    email: StringColumn({ 
-      label: 'Email', 
-      maxLength: 100,
-      mandatory: true 
-    }),
-    department: StringColumn({ 
-      label: 'Department', 
-      maxLength: 100 
-    }),
+    // ---------------------------------------------------------
+
     document_type: ChoiceColumn({
       label: 'Document Type',
       mandatory: true,
