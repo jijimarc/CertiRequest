@@ -27,7 +27,7 @@ export class DocumentRequestService {
       }
 
       const { result } = await response.json();
-      return result ? result : [];
+      return result ? result.map(record => this._formatRecord(record)) : [];
     } catch (error) {
       console.error('Error fetching requests:', error);
       throw error;
@@ -124,7 +124,7 @@ export class DocumentRequestService {
       }
 
       const { result } = await response.json();
-      return result;
+      return result ? this._formatRecord(result) : null;
     } catch (error) {
       console.error('Error fetching request:', error);
       throw error;
@@ -158,5 +158,21 @@ export class DocumentRequestService {
       console.error('Error fetching stats:', error);
       throw error;
     }
+  }
+
+  // Add this helper method right before the end of the class
+  _formatRecord(record) {
+    return {
+      // Keep all original raw fields just in case
+      ...record,
+      
+      // Clean up the new Customer Reference field
+      customerName: record.customer ? record.customer.display_value : 'Unknown Customer',
+      customerId: record.customer ? record.customer.value : null,
+      
+      // Clean up the choice dropdowns so React can read them easily
+      docTypeClean: record.document_type ? record.document_type.display_value : 'Unknown Document',
+      statusClean: record.status ? record.status.value : 'pending'
+    };
   }
 }
