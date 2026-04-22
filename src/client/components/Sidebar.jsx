@@ -5,20 +5,11 @@ const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊', badge: null },
     { id: 'my-requests', label: 'My Requests', icon: '📋', badge: requestCount > 0 ? requestCount.toString() : null },
+    { id: 'staff-portal', label: 'Staff Dashboard', icon: '🛠️', badge: null },
     { id: 'track-request', label: 'Track Request', icon: '👁️', badge: null },
     { id: 'payments', label: 'Payments', icon: '💳', badge: null },
     { id: 'help', label: 'Help & Support', icon: '❓', badge: null },
   ];
-
-  // Conditionally add Staff Portal for staff users
-  if (user?.role === 'staff') {
-    menuItems.splice(menuItems.length - 1, 0, { 
-      id: 'staff-portal', 
-      label: 'Staff Portal', 
-      icon: '🛠️', 
-      badge: null 
-    });
-  }
 
   return (
     <nav className="sidebar">

@@ -313,7 +313,7 @@ function App() {
                 {activeTab === 'my-requests' && 'My Requests'}
                 {activeTab === 'track-request' && 'Track Request'}
                 {activeTab === 'payments' && 'Payments'}
-                {activeTab === 'staff-portal' && 'Staff Portal'}
+                {activeTab === 'staff-portal' && 'Staff Dashboard'}
                 {activeTab === 'help' && 'Help & Support'}
               </h1>
               <p className="page-subtitle">
