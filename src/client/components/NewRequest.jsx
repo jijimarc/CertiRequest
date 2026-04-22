@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { AIService } from '../services/AIService';
 
 export default function NewRequest({ onClose, onSubmit, loading: parentLoading }) {
   const [formData, setFormData] = useState({
-    studentName: '', 
+    studentName: '',
     studentId: '',
     documentType: '',
     urgency: 'standard',
@@ -25,11 +26,10 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-  
+
     setIsExtracting(true);
     try {
-      const extractedData = await AIService.extractFromID(file); 
-      
+      const extractedData = await AIService.extractFromID(file);
       setFormData(prev => ({
         ...prev,
         studentName: extractedData.name || prev.studentName,
@@ -38,7 +38,7 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
         purpose: `Requesting document for ${extractedData.department || 'University'} requirements.`
       }));
     } catch (err) {
-      console.error("AI Extraction failed", err);
+      console.error('AI Extraction failed', err);
     } finally {
       setIsExtracting(false);
     }
@@ -56,20 +56,68 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
     }
   };
 
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
+  const modalContent = (
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        background: 'rgba(0, 0, 0, 0.6)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 9999,
+        backdropFilter: 'blur(2px)',
+        animation: 'fadeIn 0.2s ease-out'
+      }}
+    >
+      <div
+        className="modal-content"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: 'white',
+          borderRadius: '12px',
+          width: '600px',
+          maxWidth: '90%',
+          maxHeight: '90vh',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          animation: 'popUp 0.3s ease-out'
+        }}
+      >
+        {/* Modal Header */}
         <div className="modal-header">
           <h2 className="modal-title">New Document Request</h2>
           <button className="modal-close" onClick={onClose}>&times;</button>
         </div>
 
-        <div className="modal-body">
-          <form onSubmit={handleSubmit}>
+        {/* Modal Body */}
+        <div className="modal-body" style={{ overflowY: 'auto', flex: 1, padding: '2rem' }}>
+          <form id="new-request-form" onSubmit={handleSubmit}>
             <div className="form-grid">
-            <div className="form-group full-width" style={{ backgroundColor: '#f0f7ff', padding: '15px', borderRadius: '8px', border: '1px dashed #0066cc' }}>
-                <label className="form-label" style={{ color: '#0066cc', fontWeight: 'bold' }}>
-                  <span className="input-icon">✨</span> AI Auto-Fill
+
+              {/* AI Auto-Fill */}
+              <div
+                className="full-width"
+                style={{
+                  backgroundColor: '#f0f7ff',
+                  padding: '15px',
+                  borderRadius: '8px',
+                  border: '1px dashed #0066cc',
+                  marginBottom: '0.5rem'
+                }}
+              >
+                <label
+                  className="form-label"
+                  style={{ color: '#0066cc', fontWeight: 'bold', display: 'block', marginBottom: '6px' }}
+                >
+                  ✨ AI Auto-Fill
                 </label>
                 <p style={{ fontSize: '13px', color: '#555', marginBottom: '10px' }}>
                   Upload a photo of your Student ID to instantly pre-fill your details!
@@ -81,48 +129,55 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
                   disabled={isExtracting}
                   style={{ display: 'block', width: '100%', padding: '5px' }}
                 />
-                
-                {/* Loading Spinner for AI */}
                 {isExtracting && (
-                  <div style={{ marginTop: '10px', color: '#0066cc', fontSize: '14px', display: 'flex', alignItems: 'center' }}>
-                    <span className="spinner" style={{ width: '14px', height: '14px', borderTopColor: '#0066cc', marginRight: '8px' }}></span>
+                  <div style={{
+                    marginTop: '10px',
+                    color: '#0066cc',
+                    fontSize: '14px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}>
+                    <span
+                      className="spinner"
+                      style={{ width: '14px', height: '14px', borderTopColor: '#0066cc' }}
+                    />
                     Gemini AI is scanning your ID...
                   </div>
                 )}
               </div>
 
-              {/* --- New Name & ID Fields --- */}
-              <div className="form-group">
+              {/* Student Name */}
+              <div>
                 <label className="form-label">Student Name</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   name="studentName"
-                  value={formData.studentName} 
+                  value={formData.studentName}
                   onChange={handleInputChange}
-                  className="form-control" 
+                  className="form-input"
                   placeholder="e.g. John Doe"
                   required
                 />
               </div>
 
-              <div className="form-group">
+              {/* Student ID */}
+              <div>
                 <label className="form-label">Student ID</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   name="studentId"
-                  value={formData.studentId} 
+                  value={formData.studentId}
                   onChange={handleInputChange}
-                  className="form-control" 
+                  className="form-input"
                   placeholder="e.g. STU001"
                   required
                 />
               </div>
 
               {/* Document Type */}
-              <div className="form-group full-width">
-                <label className="form-label">
-                  <span className="input-icon">📄</span> Document Type *
-                </label>
+              <div className="full-width">
+                <label className="form-label">📄 Document Type *</label>
                 <select
                   name="documentType"
                   value={formData.documentType}
@@ -140,10 +195,8 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
               </div>
 
               {/* Urgency */}
-              <div className="form-group">
-                <label className="form-label">
-                  <span className="input-icon">⚡</span> Urgency Level *
-                </label>
+              <div>
+                <label className="form-label">⚡ Urgency Level *</label>
                 <select
                   name="urgency"
                   value={formData.urgency}
@@ -156,11 +209,9 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
                 </select>
               </div>
 
-              {/* Delivery */}
-              <div className="form-group">
-                <label className="form-label">
-                  <span className="input-icon">🚚</span> Delivery Mode *
-                </label>
+              {/* Delivery Mode */}
+              <div>
+                <label className="form-label">🚚 Delivery Mode *</label>
                 <select
                   name="deliveryMode"
                   value={formData.deliveryMode}
@@ -174,10 +225,8 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
               </div>
 
               {/* Purpose */}
-              <div className="form-group full-width">
-                <label className="form-label">
-                  <span className="input-icon">📝</span> Purpose of Request *
-                </label>
+              <div className="full-width">
+                <label className="form-label">📝 Purpose of Request *</label>
                 <textarea
                   name="purpose"
                   value={formData.purpose}
@@ -188,33 +237,42 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
                   required
                 />
               </div>
-            </div>
 
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={onClose}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={loading}
-                style={{ minWidth: '160px' }}
-              >
-                {loading ? (
-                  <>
-                    <span className="spinner" style={{ width: '16px', height: '16px', borderTopColor: '#fff', marginRight: '10px' }}></span>
-                    Processing...
-                  </>
-                ) : 'Submit Request'}
-              </button>
             </div>
           </form>
         </div>
+
+        {/* Modal Footer */}
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="new-request-form"
+            className="btn btn-primary"
+            disabled={loading}
+            style={{ minWidth: '160px' }}
+          >
+            {loading ? (
+              <>
+                <span
+                  className="spinner"
+                  style={{ width: '16px', height: '16px', borderTopColor: '#fff', marginRight: '10px' }}
+                />
+                Processing...
+              </>
+            ) : 'Submit Request'}
+          </button>
+        </div>
+
       </div>
     </div>
   );
+
+  return ReactDOM.createPortal(modalContent, document.body);
 }

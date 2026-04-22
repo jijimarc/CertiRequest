@@ -17,6 +17,11 @@ declare global {
                         table: 'sys_module'
                         id: '7bad51b065974f06a95449218db6e21e'
                     }
+                    'document-request-portal': {
+                        table: 'sys_ui_page'
+                        id: 'ec8a70d8f5eb4d039c3c6598ff1bb128'
+                        deleted: true
+                    }
                     package_json: {
                         table: 'sys_module'
                         id: '7418af9b01a94931806eb622fb8d498f'
@@ -51,6 +56,16 @@ declare global {
                         id: '10f783bf937f433787e085cd4127ca95'
                         deleted: true
                     }
+                    'x_2001423_certireq/main': {
+                        table: 'sys_ux_lib_asset'
+                        id: 'f8797acf27b84e7baa4ff6d9db305f70'
+                        deleted: true
+                    }
+                    'x_2001423_certireq/main.js.map': {
+                        table: 'sys_ux_lib_asset'
+                        id: '63d295c460cb46f3883944d636f70131'
+                        deleted: true
+                    }
                 }
                 composite: [
                     {
@@ -82,6 +97,7 @@ declare global {
                     {
                         table: 'sn_glider_source_artifact_m2m'
                         id: '0ad2c0d8295d4381821319af0f196b08'
+                        deleted: false
                         key: {
                             application_file: '0b236610aff348459e6009a323f43425'
                             source_artifact: '28daefe8f6e445769542be6969c84549'
@@ -99,6 +115,7 @@ declare global {
                     {
                         table: 'sys_ux_lib_asset'
                         id: '0b236610aff348459e6009a323f43425'
+                        deleted: false
                         key: {
                             name: 'x_2001423_certireq/main.js.map'
                         }
@@ -114,6 +131,7 @@ declare global {
                     {
                         table: 'sys_ui_page'
                         id: '0c6a9e8f2adc46eda1766b66dd50b9f9'
+                        deleted: false
                         key: {
                             endpoint: 'x_2001423_certireq_portal.do'
                         }
@@ -130,6 +148,7 @@ declare global {
                     {
                         table: 'sn_glider_source_artifact_m2m'
                         id: '137ed12786e84749b0bc738e591053be'
+                        deleted: false
                         key: {
                             application_file: 'd36935083ce94f2389856a1da904b1ce'
                             source_artifact: '28daefe8f6e445769542be6969c84549'
@@ -187,6 +206,7 @@ declare global {
                     {
                         table: 'sn_glider_source_artifact'
                         id: '28daefe8f6e445769542be6969c84549'
+                        deleted: false
                         key: {
                             name: 'x_2001423_certireq_portal.do - BYOUI Files'
                         }
@@ -969,6 +989,7 @@ declare global {
                     {
                         table: 'sn_glider_source_artifact_m2m'
                         id: 'bc8cb82fc8ca4eb8ae2b22e80035a423'
+                        deleted: false
                         key: {
                             application_file: '0c6a9e8f2adc46eda1766b66dd50b9f9'
                             source_artifact: '28daefe8f6e445769542be6969c84549'
@@ -1063,6 +1084,7 @@ declare global {
                     {
                         table: 'sys_ux_lib_asset'
                         id: 'd36935083ce94f2389856a1da904b1ce'
+                        deleted: false
                         key: {
                             name: 'x_2001423_certireq/main'
                         }

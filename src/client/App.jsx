@@ -8,10 +8,14 @@ import MyRequests from './components/MyRequests';
 import TrackRequest from './components/TrackRequest';
 import Payments from './components/Payments';
 import HelpSupport from './components/HelpSupport';
+import StaffDashboard from './components/StaffDashboard';
 import Toast from './components/Toast';
 import LoadingScreen from './components/LoadingScreen';
+import Register from './components/Register';
+import Login from './components/Login';
 
 function App() {
+  const [view, setView] = useState('login'); 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showNewRequestModal, setShowNewRequestModal] = useState(false);
   const [requests, setRequests] = useState([]);
@@ -22,48 +26,18 @@ function App() {
     name: 'John Doe',
     email: 'john.doe@university.edu',
     department: 'Computer Science',
-    role: 'staff', // Mocked role for Staff Portal demo
     avatar: null
   });
 
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        // Handle URL-based routing for staff dashboard
-        const path = window.location.pathname;
-        if (path.includes('/dashboard/staff')) {
-          setActiveTab('staff-portal');
-        }
-
-        // Fetch current logged-in user details from ServiceNow
-        const userResponse = await fetch('/api/now/ui/userinfo', {
-          headers: {
-            'X-No-Response-Challenge': 'true'
-          }
-        });
-        
-        // If we get a 401 Unauthorized, redirect to the real login page
-        if (userResponse.status === 401) {
-          window.location.href = '/login.do?sysparm_goto_url=' + encodeURIComponent(window.location.href);
-          return;
-        }
-
-        if (userResponse.ok) {
-          const userData = await userResponse.json();
-          setUser({
-            id: userData.result.user_id,
-            name: userData.result.user_name,
-            email: userData.result.user_email,
-            department: userData.result.user_department || 'General',
-            role: userData.result.user_role || 'staff', // Fallback to staff for demo
-            avatar: null
-          });
-        }
+        // Skip auto-auth - always require login
+        setLoading(false);
       } catch (err) {
-        console.warn('Could not fetch user info, using guest profile');
+        console.warn('Error initializing app');
       } finally {
         setLoading(false);
-        loadRequests();
       }
     };
 
@@ -80,7 +54,6 @@ function App() {
 
   const loadRequests = async () => {
     try {
-      // ServiceNow Table API endpoint
       const response = await fetch('/api/now/table/x_2001423_certireq_document_request?sysparm_query=ORDERBYDESCsys_created_on', {
         headers: {
           'X-No-Response-Challenge': 'true'
@@ -96,16 +69,16 @@ function App() {
       
       const result = await response.json();
       
-      // Map ServiceNow fields to our React state format
       const mappedRequests = result.result.map(record => ({
         id: record.sys_id,
+        number: record.number || record.sys_id.substring(0, 8).toUpperCase(),
         userName: record.student_name || 'Anonymous Student',
         documentType: record.document_type || 'Unknown Document',
         dateSubmitted: record.submitted_date || record.sys_created_on,
         status: record.status || 'pending',
         purpose: record.purpose,
         deliveryMode: record.delivery_mode,
-        urgency: record.urgency_level || 'standard',
+        urgency: record.urgency_level,
         fee: parseFloat(record.payment_amount) || 0,
         progress: record.status === 'completed' ? 100 : (record.status === 'processing' ? 50 : 10)
       }));
@@ -115,7 +88,6 @@ function App() {
       console.error('ServiceNow Fetch Error:', error);
       showToast('Error loading live data. Using offline mode.', 'warning');
       
-      // Fallback to sample data if API fails (e.g. during local development)
       const sampleRequests = [
         {
           id: 1,
@@ -134,10 +106,9 @@ function App() {
     try {
       setLoading(true);
       
-      // Prepare the payload for ServiceNow
       const payload = {
-        student_id: user.id,
-        student_name: user.name,
+        student_id: requestData.studentId || user.id,      
+        student_name: requestData.studentName || user.name,
         email: user.email,
         department: user.department,
         document_type: requestData.documentType,
@@ -152,7 +123,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'X-UserToken': window.g_ck || '' // ServiceNow CRSF token
+          'X-UserToken': window.g_ck || '' 
         },
         body: JSON.stringify(payload)
       });
@@ -161,7 +132,6 @@ function App() {
 
       const result = await response.json();
       
-      // Add the new record to the UI immediately
       const newRecord = {
         id: result.result.sys_id,
         ...requestData,
@@ -178,7 +148,6 @@ function App() {
       console.error('Submission Error:', error);
       showToast('Offline Mode: Request saved locally only.', 'warning');
       
-      // Fallback for local testing
       const newRequest = {
         id: Date.now(),
         ...requestData,
@@ -193,9 +162,83 @@ function App() {
     }
   };
 
+  const handleRegister = async (registerData) => {
+    try {
+      setLoading(true);
+      
+      const payload = {
+        fullname: registerData.fullname,
+        email: registerData.email,
+        password: registerData.password,
+        contact_number: registerData.contact_number,
+        user_type: registerData.user_type,
+        student_id_number: registerData.student_id_number,
+        department: registerData.department,
+        program: registerData.program,
+        year_level: registerData.year_level,
+        is_regular: registerData.is_regular,
+        year_of_graduation: registerData.year_of_graduation,
+        personal_email: registerData.personal_email,
+        customer_status: 'active'
+      };
+
+      const response = await fetch('/api/now/table/x_2001423_certireq_customer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-UserToken': window.g_ck || ''
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) throw new Error('Registration Failed');
+
+      const result = await response.json();
+      
+      setUser({
+        id: result.result.sys_id,
+        name: registerData.fullname,
+        email: registerData.email,
+        department: registerData.department || 'General',
+        avatar: null
+      });
+
+      setView('app');
+      showToast('Registration Successful! Welcome to CertiRequest.', 'success');
+      
+    } catch (error) {
+      console.error('Registration Error:', error);
+      showToast('Registration Error. Please try again.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const showToast = (message, type = 'info') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 4000);
+  };
+
+  const handleLogout = () => {
+    setUser({
+      id: '',
+      name: '',
+      email: '',
+      department: '',
+      avatar: null
+    });
+    setView('login');
+    setActiveTab('dashboard');
+    setRequests([]);
+    showToast('Logged out successfully', 'success');
+  };
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+    setView('app');
+    loadRequests();
+    showToast('Welcome back, ' + userData.name + '!', 'success');
   };
 
   const getStats = () => {
@@ -222,6 +265,7 @@ function App() {
             onNewRequest={() => setShowNewRequestModal(true)}
             user={user}
             onRefresh={loadRequests}
+            onLogout={handleLogout}
           />
         );
       case 'my-requests':
@@ -233,6 +277,7 @@ function App() {
       case 'help':
         return <HelpSupport />;
       case 'staff-portal':
+        console.log('ACTIVE TAB IS STAFF PORTAL');
         return <StaffDashboard requests={requests} />;
       default:
         return <Dashboard requests={requests} stats={getStats()} />;
@@ -241,6 +286,14 @@ function App() {
 
   if (loading && requests.length === 0) {
     return <LoadingScreen />;
+  }
+
+  if (view === 'login') {
+    return <Login onLogin={handleLogin} onGoToRegister={() => setView('register')} />;
+  }
+
+  if (view === 'register') {
+    return <Register onRegister={handleRegister} onBackToLogin={() => setView('login')} />;
   }
 
   return (
@@ -255,21 +308,21 @@ function App() {
         <header className="header">
           <div className="header-content">
             <div className="header-left">
-              <h1 className="page-title">
+            <h1 className="page-title">
                 {activeTab === 'dashboard' && 'Dashboard'}
                 {activeTab === 'my-requests' && 'My Requests'}
                 {activeTab === 'track-request' && 'Track Request'}
                 {activeTab === 'payments' && 'Payments'}
-                {activeTab === 'help' && 'Help & Support'}
                 {activeTab === 'staff-portal' && 'Staff Portal'}
+                {activeTab === 'help' && 'Help & Support'}
               </h1>
               <p className="page-subtitle">
                 {activeTab === 'dashboard' && 'Welcome back! Here\'s your overview'}
                 {activeTab === 'my-requests' && 'View and manage your requests'}
                 {activeTab === 'track-request' && 'Track your request status'}
                 {activeTab === 'payments' && 'Manage your payments'}
+                {activeTab === 'staff-portal' && 'Manage and process document requests'}
                 {activeTab === 'help' && 'Get help and support'}
-                {activeTab === 'staff-portal' && 'ServiceNow Request Queue Management'}
               </p>
             </div>
             <div className="header-actions">
