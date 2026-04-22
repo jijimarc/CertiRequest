@@ -1,7 +1,6 @@
 import React from 'react';
 
 const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
-  // We simply removed the 'new-request' object from this list
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊', badge: null },
     { id: 'my-requests', label: 'My Requests', icon: '📋', badge: requestCount > 0 ? requestCount.toString() : null },
@@ -49,7 +48,7 @@ const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
           </div>
         </div>
         <button className="logout-btn">
-          <span className="logout-icon">🚪</span>
+          <span className="logout-icon">Logout</span>
         </button>
       </div>
     </nav>

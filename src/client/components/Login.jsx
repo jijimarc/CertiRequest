@@ -13,14 +13,12 @@ const Login = ({ onLogin, onGoToRegister }) => {
     setLoading(true);
 
     try {
-      // Validate inputs
       if (!email || !password) {
         setError('Please fill in all fields');
         setLoading(false);
         return;
       }
 
-      // Call login API - FIXED: removed %3D encoding issue
       const response = await fetch(`/api/now/table/x_2001423_certireq_customer?sysparm_query=email=${encodeURIComponent(email)}&sysparm_limit=1`, {
         method: 'GET',
         headers: {
@@ -36,7 +34,6 @@ const Login = ({ onLogin, onGoToRegister }) => {
 
       const result = await response.json();
       
-      // Check if user exists
       if (!result.result || result.result.length === 0) {
         setError('Email not found');
         setLoading(false);
@@ -45,16 +42,15 @@ const Login = ({ onLogin, onGoToRegister }) => {
 
       const user = result.result[0];
 
-      // Simple password verification
       if (user.password !== password) {
         setError('Invalid password');
         setLoading(false);
         return;
       }
 
-      // Login successful
       onLogin({
-        id: user.sys_id,
+        id: user.sys_id,                          
+        studentIdNumber: user.student_id_number,   
         name: user.fullname,
         email: user.email,
         department: user.department || 'General',
@@ -64,6 +60,39 @@ const Login = ({ onLogin, onGoToRegister }) => {
     } catch (error) {
       console.error('Login Error:', error);
       setError('Login error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStaffLogin = async () => {
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/now/ui/userinfo', {
+        headers: {
+          'Accept': 'application/json',
+          'X-No-Response-Challenge': 'true'
+        }
+      });
+
+      if (!response.ok) throw new Error('Not logged into ServiceNow');
+
+      const result = await response.json();
+      const snUser = result.result;
+
+      onLogin({
+        id: snUser.sys_id,
+        name: snUser.user_name || snUser.name || 'Staff Member',
+        email: snUser.email || '',
+        isStaff: true, // <-- THIS IS THE MAGIC FLAG
+        department: 'Registrar'
+      });
+
+    } catch (error) {
+      console.error('Staff Login Error:', error);
+      setError('Staff login failed. Ensure you are logged into the main ServiceNow platform.');
     } finally {
       setLoading(false);
     }
@@ -135,6 +164,19 @@ const Login = ({ onLogin, onGoToRegister }) => {
 
         <div className="login-help">
           <a href="#" className="help-link">Forgot your password?</a>
+        </div>
+
+        <div style={{ marginTop: '2rem', textAlign: 'center', borderTop: '1px dashed #e2e8f0', paddingTop: '1.5rem' }}>
+          <p style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '0.75rem' }}>Are you a Registrar employee?</p>
+          <button 
+            type="button" 
+            className="btn btn-secondary" 
+            style={{ width: '100%' }}
+            onClick={handleStaffLogin}
+            disabled={loading}
+          >
+            🔐 Staff Single Sign-On
+          </button>
         </div>
       </div>
 

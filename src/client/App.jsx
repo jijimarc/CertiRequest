@@ -32,12 +32,32 @@ function App() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        // Skip auto-auth - always require login
-        setLoading(false);
+        const userResponse = await fetch('/api/now/ui/userinfo', {
+          headers: {
+            'X-No-Response-Challenge': 'true'
+          }
+        });
+        
+        if (userResponse.status === 401) {
+          window.location.href = '/login.do?sysparm_goto_url=' + encodeURIComponent(window.location.href);
+          return;
+        }
+
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          setUser({
+            id: userData.result.user_id,
+            name: userData.result.user_name,
+            email: userData.result.user_email,
+            department: userData.result.user_department || 'General',
+            avatar: null
+          });
+        }
       } catch (err) {
-        console.warn('Error initializing app');
+        console.warn('Could not fetch user info, using guest profile');
       } finally {
         setLoading(false);
+        loadRequests();
       }
     };
 
@@ -52,11 +72,17 @@ function App() {
     }
   }, [showNewRequestModal]);
 
-  const loadRequests = async () => {
+  const loadRequests = async (currentUser = user) => {
     try {
-      const response = await fetch('/api/now/table/x_2001423_certireq_document_request?sysparm_query=ORDERBYDESCsys_created_on', {
+      if (!currentUser || !currentUser.id) return;
+      const queryParams = currentUser.isStaff 
+        ? 'ORDERBYDESCsys_created_on' 
+        : `customer=${currentUser.id}^ORDERBYDESCsys_created_on`;
+
+      const response = await fetch(`/api/now/table/x_2001423_certireq_document_request?sysparm_query=${queryParams}&sysparm_display_value=all`, {
         headers: {
-          'X-No-Response-Challenge': 'true'
+          'X-No-Response-Challenge': 'true',
+          'Accept': 'application/json'
         }
       });
       
@@ -70,35 +96,30 @@ function App() {
       const result = await response.json();
       
       const mappedRequests = result.result.map(record => ({
-        id: record.sys_id,
-        number: record.number || record.sys_id.substring(0, 8).toUpperCase(),
-        userName: record.student_name || 'Anonymous Student',
-        documentType: record.document_type || 'Unknown Document',
-        dateSubmitted: record.submitted_date || record.sys_created_on,
-        status: record.status || 'pending',
-        purpose: record.purpose,
-        deliveryMode: record.delivery_mode,
-        urgency: record.urgency_level,
-        fee: parseFloat(record.payment_amount) || 0,
-        progress: record.status === 'completed' ? 100 : (record.status === 'processing' ? 50 : 10)
+        id: record.sys_id?.value || record.sys_id,
+        number: record.number?.value || record.number || (record.sys_id?.value || record.sys_id).substring(0, 8).toUpperCase(),
+        userName: record.customer?.display_value || 'Unknown Customer',
+        studentId: record.student_id_number?.display_value || record.student_id_number || '', 
+        email: record.email?.display_value || record.email || '',
+        contactNumber: record.contact_number?.display_value || record.contact_number || '',
+        userType: record.user_type?.display_value || record.user_type || 'student',
+        documentType: record.document_type?.display_value || record.document_type || 'Unknown Document',
+        dateSubmitted: record.submitted_date?.display_value || record.submitted_date || record.sys_created_on?.value || record.sys_created_on,
+        status: record.status?.value || record.status || 'pending',
+        purpose: record.purpose?.display_value || record.purpose,
+        deliveryMode: record.delivery_mode?.display_value || record.delivery_mode,
+        urgency: record.urgency_level?.display_value || record.urgency_level,
+        fee: parseFloat(record.payment_amount?.value || record.payment_amount) || 0,
+        progress: (record.status?.value || record.status) === 'completed' ? 100 : 
+                 ((record.status?.value || record.status) === 'processing' ? 50 : 10)
       }));
 
       setRequests(mappedRequests);
     } catch (error) {
       console.error('ServiceNow Fetch Error:', error);
-      showToast('Error loading live data. Using offline mode.', 'warning');
       
-      const sampleRequests = [
-        {
-          id: 1,
-          documentType: 'Official Transcript',
-          dateSubmitted: '2024-01-15',
-          status: 'completed',
-          purpose: 'Graduate School Application',
-          progress: 100
-        }
-      ];
-      setRequests(sampleRequests);
+      showToast('Error loading live data from server.', 'error');
+      setRequests([]);
     }
   };
 
@@ -237,7 +258,15 @@ function App() {
   const handleLogin = (userData) => {
     setUser(userData);
     setView('app');
-    loadRequests();
+    
+    if (userData.isStaff) {
+      setActiveTab('staff-portal');
+      loadRequests(userData); 
+    } else {
+      setActiveTab('dashboard'); 
+      loadRequests(userData); 
+    }
+    
     showToast('Welcome back, ' + userData.name + '!', 'success');
   };
 
@@ -313,7 +342,7 @@ function App() {
                 {activeTab === 'my-requests' && 'My Requests'}
                 {activeTab === 'track-request' && 'Track Request'}
                 {activeTab === 'payments' && 'Payments'}
-                {activeTab === 'staff-portal' && 'Staff Dashboard'}
+                {activeTab === 'staff-portal' && 'Staff Portal'}
                 {activeTab === 'help' && 'Help & Support'}
               </h1>
               <p className="page-subtitle">

@@ -26,8 +26,6 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogo
           </div>
           <div className="stat-value">{stats?.total?.value || 0}</div>
           <div className="stat-change positive">
-            <span className="change-icon">↗️</span>
-            {stats?.total?.change || '+0%'} from last month
           </div>
         </div>
 
@@ -54,8 +52,6 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogo
           </div>
           <div className="stat-value">{stats?.completed?.value || 0}</div>
           <div className="stat-change positive">
-            <span className="change-icon">↗️</span>
-            {stats?.completed?.change || '+0%'} from last month
           </div>
         </div>
 
@@ -68,14 +64,11 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogo
           </div>
           <div className="stat-value">{stats?.payments?.value || '$0.00'}</div>
           <div className="stat-change positive">
-            <span className="change-icon">↗️</span>
-            {stats?.payments?.change || '+0%'} from last month
           </div>
         </div>
       </div>
 
       <div className="dashboard-grid">
-        {/* Recent Requests */}
         <div className="recent-requests">
           <div className="section-header">
             <div>
@@ -120,7 +113,6 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogo
           </div>
         </div>
 
-        {/* Profile Widget */}
         <div className="sidebar-widgets">
           <div className="widget profile-widget">
             <div className="widget-header">
@@ -141,7 +133,7 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogo
               <div className="profile-details">
                 <div className="profile-field">
                   <span className="profile-label">ID Number</span>
-                  <span className="profile-value">{user?.id || 'STU001'}</span>
+                  <span className="profile-value">{user.studentIdNumber || 'No ID Provided'}</span>
                 </div>
                 <div className="profile-field">
                   <span className="profile-label">Email</span>
@@ -153,7 +145,7 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogo
                 </div>
               </div>
               <button className="btn btn-logout" onClick={onLogout}>
-                🚪 Logout
+                Logout
               </button>
             </div>
           </div>
