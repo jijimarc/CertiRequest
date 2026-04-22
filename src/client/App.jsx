@@ -15,7 +15,7 @@ import Register from './components/Register';
 import Login from './components/Login';
 
 function App() {
-  const [view, setView] = useState('login'); // 'login' | 'register' | 'app'
+  const [view, setView] = useState('login'); 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showNewRequestModal, setShowNewRequestModal] = useState(false);
   const [requests, setRequests] = useState([]);
@@ -32,14 +32,12 @@ function App() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        // Fetch current logged-in user details from ServiceNow
         const userResponse = await fetch('/api/now/ui/userinfo', {
           headers: {
             'X-No-Response-Challenge': 'true'
           }
         });
         
-        // If we get a 401 Unauthorized, redirect to the real login page
         if (userResponse.status === 401) {
           window.location.href = '/login.do?sysparm_goto_url=' + encodeURIComponent(window.location.href);
           return;
@@ -76,7 +74,6 @@ function App() {
 
   const loadRequests = async () => {
     try {
-      // ServiceNow Table API endpoint
       const response = await fetch('/api/now/table/x_2001423_certireq_document_request?sysparm_query=ORDERBYDESCsys_created_on', {
         headers: {
           'X-No-Response-Challenge': 'true'
@@ -92,7 +89,6 @@ function App() {
       
       const result = await response.json();
       
-      // Map ServiceNow fields to our React state format
       const mappedRequests = result.result.map(record => ({
         id: record.sys_id,
         number: record.number || record.sys_id.substring(0, 8).toUpperCase(),
@@ -112,7 +108,6 @@ function App() {
       console.error('ServiceNow Fetch Error:', error);
       showToast('Error loading live data. Using offline mode.', 'warning');
       
-      // Fallback to sample data if API fails (e.g. during local development)
       const sampleRequests = [
         {
           id: 1,
@@ -131,7 +126,6 @@ function App() {
     try {
       setLoading(true);
       
-      // Prepare the payload for ServiceNow
       const payload = {
         student_id: requestData.studentId || user.id,      
         student_name: requestData.studentName || user.name,
@@ -149,7 +143,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'X-UserToken': window.g_ck || '' // ServiceNow CRSF token
+          'X-UserToken': window.g_ck || '' 
         },
         body: JSON.stringify(payload)
       });
@@ -158,7 +152,6 @@ function App() {
 
       const result = await response.json();
       
-      // Add the new record to the UI immediately
       const newRecord = {
         id: result.result.sys_id,
         ...requestData,
@@ -175,7 +168,6 @@ function App() {
       console.error('Submission Error:', error);
       showToast('Offline Mode: Request saved locally only.', 'warning');
       
-      // Fallback for local testing
       const newRequest = {
         id: Date.now(),
         ...requestData,
@@ -194,7 +186,6 @@ function App() {
     try {
       setLoading(true);
       
-      // Prepare the payload for ServiceNow Customer table
       const payload = {
         fullname: registerData.fullname,
         email: registerData.email,
@@ -225,7 +216,6 @@ function App() {
 
       const result = await response.json();
       
-      // AUTO-LOGIN: Set user state and switch to app view
       setUser({
         id: result.result.sys_id,
         name: registerData.fullname,
@@ -251,7 +241,6 @@ function App() {
   };
 
   const handleLogout = () => {
-    // Clear user session
     setUser({
       id: '',
       name: '',
@@ -308,6 +297,7 @@ function App() {
       case 'help':
         return <HelpSupport />;
       case 'staff-portal':
+        console.log('ACTIVE TAB IS STAFF PORTAL');
         return <StaffDashboard requests={requests} />;
       default:
         return <Dashboard requests={requests} stats={getStats()} />;
@@ -338,11 +328,12 @@ function App() {
         <header className="header">
           <div className="header-content">
             <div className="header-left">
-              <h1 className="page-title">
+            <h1 className="page-title">
                 {activeTab === 'dashboard' && 'Dashboard'}
                 {activeTab === 'my-requests' && 'My Requests'}
                 {activeTab === 'track-request' && 'Track Request'}
                 {activeTab === 'payments' && 'Payments'}
+                {activeTab === 'staff-portal' && 'Staff Portal'}
                 {activeTab === 'help' && 'Help & Support'}
               </h1>
               <p className="page-subtitle">
@@ -350,6 +341,7 @@ function App() {
                 {activeTab === 'my-requests' && 'View and manage your requests'}
                 {activeTab === 'track-request' && 'Track your request status'}
                 {activeTab === 'payments' && 'Manage your payments'}
+                {activeTab === 'staff-portal' && 'Manage and process document requests'}
                 {activeTab === 'help' && 'Get help and support'}
               </p>
             </div>
