@@ -5,6 +5,10 @@ declare global {
         namespace Internal {
             interface Keys extends KeysRegistry {
                 explicit: {
+                    '03c13b6f0f540310b9d1c9c530d1b27e': {
+                        table: 'sys_security_acl'
+                        id: '03c13b6f0f540310b9d1c9c530d1b27e'
+                    }
                     '11ff1b670fd00310b9d1c9c530d1b2ed': {
                         table: 'sys_scope_privilege'
                         id: '11ff1b670fd00310b9d1c9c530d1b2ed'
@@ -20,6 +24,10 @@ declare global {
                     '1dff5b670fd00310b9d1c9c530d1b226': {
                         table: 'sys_scope_privilege'
                         id: '1dff5b670fd00310b9d1c9c530d1b226'
+                    }
+                    '1fc17b6f0f540310b9d1c9c530d1b241': {
+                        table: 'sys_security_acl'
+                        id: '1fc17b6f0f540310b9d1c9c530d1b241'
                     }
                     '51ff1b670fd00310b9d1c9c530d1b298': {
                         table: 'sys_scope_privilege'
@@ -37,9 +45,29 @@ declare global {
                         table: 'sys_scope_privilege'
                         id: '69ff5b670fd00310b9d1c9c530d1b240'
                     }
+                    '71223baf0f540310b9d1c9c530d1b23d': {
+                        table: 'sys_security_acl'
+                        id: '71223baf0f540310b9d1c9c530d1b23d'
+                    }
                     '80b71d030f988310b9d1c9c530d1b239': {
                         table: 'sys_ws_operation'
                         id: '80b71d030f988310b9d1c9c530d1b239'
+                    }
+                    '87f133af0f540310b9d1c9c530d1b2db': {
+                        table: 'sys_security_acl'
+                        id: '87f133af0f540310b9d1c9c530d1b2db'
+                    }
+                    '87f133af0f540310b9d1c9c530d1b2f3': {
+                        table: 'sys_security_acl'
+                        id: '87f133af0f540310b9d1c9c530d1b2f3'
+                    }
+                    '8fc13b6f0f540310b9d1c9c530d1b265': {
+                        table: 'sys_security_acl'
+                        id: '8fc13b6f0f540310b9d1c9c530d1b265'
+                    }
+                    '8fc13b6f0f540310b9d1c9c530d1b2f8': {
+                        table: 'sys_security_acl'
+                        id: '8fc13b6f0f540310b9d1c9c530d1b2f8'
                     }
                     '99ff5b670fd00310b9d1c9c530d1b21e': {
                         table: 'sys_scope_privilege'
@@ -49,21 +77,49 @@ declare global {
                         table: 'sys_ux_theme_asset'
                         id: 'eb87fc5295c046c7bf28db94ae9bd765'
                     }
+                    b2f133af0f540310b9d1c9c530d1b279: {
+                        table: 'sys_security_acl'
+                        id: 'b2f133af0f540310b9d1c9c530d1b279'
+                    }
                     bom_json: {
                         table: 'sys_module'
                         id: 'ae0e40b232db452ab162d030ea070aa1'
+                    }
+                    c7c13b6f0f540310b9d1c9c530d1b2bb: {
+                        table: 'sys_security_acl'
+                        id: 'c7c13b6f0f540310b9d1c9c530d1b2bb'
+                    }
+                    ce223baf0f540310b9d1c9c530d1b2b8: {
+                        table: 'sys_security_acl'
+                        id: 'ce223baf0f540310b9d1c9c530d1b2b8'
                     }
                     d1ff1b670fd00310b9d1c9c530d1b2f1: {
                         table: 'sys_scope_privilege'
                         id: 'd1ff1b670fd00310b9d1c9c530d1b2f1'
                     }
+                    d7c17b6f0f540310b9d1c9c530d1b204: {
+                        table: 'sys_security_acl'
+                        id: 'd7c17b6f0f540310b9d1c9c530d1b204'
+                    }
                     d9ff5b670fd00310b9d1c9c530d1b222: {
                         table: 'sys_scope_privilege'
                         id: 'd9ff5b670fd00310b9d1c9c530d1b222'
                     }
+                    dfc17b6f0f540310b9d1c9c530d1b297: {
+                        table: 'sys_security_acl'
+                        id: 'dfc17b6f0f540310b9d1c9c530d1b297'
+                    }
                     edeadfab0f900310b9d1c9c530d1b2fe: {
                         table: 'sys_properties'
                         id: 'edeadfab0f900310b9d1c9c530d1b2fe'
+                    }
+                    fec13b6f0f540310b9d1c9c530d1b22e: {
+                        table: 'sys_security_acl'
+                        id: 'fec13b6f0f540310b9d1c9c530d1b22e'
+                    }
+                    fef133af0f540310b9d1c9c530d1b29d: {
+                        table: 'sys_security_acl'
+                        id: 'fef133af0f540310b9d1c9c530d1b29d'
                     }
                     package_json: {
                         table: 'sys_module'
@@ -85,6 +141,19 @@ declare global {
                         key: {
                             name: 'x_2001423_certireq_customer'
                             element: 'is_regular'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '07c13b6f0f540310b9d1c9c530d1b26b'
+                        key: {
+                            sys_security_acl: '8fc13b6f0f540310b9d1c9c530d1b265'
+                            sys_user_role: {
+                                id: '7ec13b6f0f540310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq.Admin'
+                                }
+                            }
                         }
                     },
                     {
@@ -121,10 +190,61 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_element'
+                        id: '1013b7230f940310b9d1c9c530d1b2d5'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'student_id_number'
+                            position: '13'
+                        }
+                    },
+                    {
                         table: 'sys_ux_lib_asset'
                         id: '11c61995e3334299a0f3510cf860d1d1'
                         key: {
                             name: 'x_2001423_certireq/main'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '1413b7230f940310b9d1c9c530d1b2d2'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'email'
+                            position: '9'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '1813b7230f940310b9d1c9c530d1b2cf'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'year_of_graduation'
+                            position: '5'
                         }
                     },
                     {
@@ -142,6 +262,40 @@ declare global {
                         key: {
                             name: 'x_2001423_certireq_customer'
                             element: 'year_level'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '1c13b7230f940310b9d1c9c530d1b2cc'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.begin_split'
+                            position: '1'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '1c13b7230f940310b9d1c9c530d1b2d7'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.end_split'
+                            position: '17'
                         }
                     },
                     {
@@ -224,6 +378,19 @@ declare global {
                             name: 'x_2001423_certireq_customer'
                             element: 'fullname'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '2bc17b6f0f540310b9d1c9c530d1b2c2'
+                        key: {
+                            sys_security_acl: 'dfc17b6f0f540310b9d1c9c530d1b297'
+                            sys_user_role: {
+                                id: '7ec13b6f0f540310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq.Admin'
+                                }
+                            }
                         }
                     },
                     {
@@ -440,12 +607,72 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '43c13b6f0f540310b9d1c9c530d1b251'
+                        key: {
+                            sys_security_acl: 'fec13b6f0f540310b9d1c9c530d1b22e'
+                            sys_user_role: {
+                                id: '7ec13b6f0f540310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq.Admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '498ce589389c4dfd9534194653255296'
                         key: {
                             name: 'x_2001423_certireq_document_request'
                             element: 'delivery_mode'
                             value: 'pickup'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '4fc13b6f0f540310b9d1c9c530d1b2c0'
+                        key: {
+                            sys_security_acl: 'c7c13b6f0f540310b9d1c9c530d1b2bb'
+                            sys_user_role: {
+                                id: '7ec13b6f0f540310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq.Admin'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '5013b7230f940310b9d1c9c530d1b2d7'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'year_level'
+                            position: '16'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '5413b7230f940310b9d1c9c530d1b2d4'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.begin_split'
+                            position: '12'
                         }
                     },
                     {
@@ -461,6 +688,40 @@ declare global {
                         key: {
                             name: 'x_2001423_certireq_document_request'
                             element: 'submitted_date'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '5813b7230f940310b9d1c9c530d1b2d1'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'program'
+                            position: '8'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '5c13b7230f940310b9d1c9c530d1b2ce'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.split'
+                            position: '4'
                         }
                     },
                     {
@@ -643,6 +904,32 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '76f133af0f540310b9d1c9c530d1b2a3'
+                        key: {
+                            sys_security_acl: 'fef133af0f540310b9d1c9c530d1b29d'
+                            sys_user_role: {
+                                id: 'fef133af0f540310b9d1c9c530d1b230'
+                                key: {
+                                    name: 'x_2001423_certireq.Staff'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '79223baf0f540310b9d1c9c530d1b242'
+                        key: {
+                            sys_security_acl: '71223baf0f540310b9d1c9c530d1b23d'
+                            sys_user_role: {
+                                id: 'ad22f7af0f540310b9d1c9c530d1b291'
+                                key: {
+                                    name: 'x_2001423_certireq.User'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_ui_element'
                         id: '795451160f1c8310b9d1c9c530d1b2da'
                         key: {
@@ -674,6 +961,13 @@ declare global {
                             }
                             element: '.begin_split'
                             position: '8'
+                        }
+                    },
+                    {
+                        table: 'sys_user_role'
+                        id: '7ec13b6f0f540310b9d1c9c530d1b213'
+                        key: {
+                            name: 'x_2001423_certireq.Admin'
                         }
                     },
                     {
@@ -710,12 +1004,51 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '87c13b6f0f540310b9d1c9c530d1b283'
+                        key: {
+                            sys_security_acl: '03c13b6f0f540310b9d1c9c530d1b27e'
+                            sys_user_role: {
+                                id: '7ec13b6f0f540310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq.Admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '8b75d4f67bae4bcaab0c4ee780abdde5'
                         key: {
                             name: 'x_2001423_certireq_document_request'
                             element: 'status'
                             value: 'ready'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '8bf133af0f540310b9d1c9c530d1b2e0'
+                        key: {
+                            sys_security_acl: '87f133af0f540310b9d1c9c530d1b2db'
+                            sys_user_role: {
+                                id: 'fef133af0f540310b9d1c9c530d1b230'
+                                key: {
+                                    name: 'x_2001423_certireq.Staff'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '8bf133af0f540310b9d1c9c530d1b2f8'
+                        key: {
+                            sys_security_acl: '87f133af0f540310b9d1c9c530d1b2f3'
+                            sys_user_role: {
+                                id: 'fef133af0f540310b9d1c9c530d1b230'
+                                key: {
+                                    name: 'x_2001423_certireq.Staff'
+                                }
+                            }
                         }
                     },
                     {
@@ -728,12 +1061,106 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_element'
+                        id: '9013b7230f940310b9d1c9c530d1b2ce'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'is_regular'
+                            position: '3'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '93c13b6f0f540310b9d1c9c530d1b2fe'
+                        key: {
+                            sys_security_acl: '8fc13b6f0f540310b9d1c9c530d1b2f8'
+                            sys_user_role: {
+                                id: '7ec13b6f0f540310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq.Admin'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '9413b7230f940310b9d1c9c530d1b2d6'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.split'
+                            position: '15'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '9813b7230f940310b9d1c9c530d1b2d3'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'personal_email'
+                            position: '11'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '98c0ae0a7a4540c3aa95e571638f8c4a'
                         key: {
                             name: 'x_2001423_certireq_document_request'
                             element: 'urgency_level'
                             value: 'standard'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '9bc17b6f0f540310b9d1c9c530d1b291'
+                        key: {
+                            sys_security_acl: '1fc17b6f0f540310b9d1c9c530d1b241'
+                            sys_user_role: {
+                                id: '7ec13b6f0f540310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq.Admin'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '9c13b7230f940310b9d1c9c530d1b2d0'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'fullname'
+                            position: '7'
                         }
                     },
                     {
@@ -861,6 +1288,13 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_user_role'
+                        id: 'ad22f7af0f540310b9d1c9c530d1b291'
+                        key: {
+                            name: 'x_2001423_certireq.User'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: 'b05a14c038e14026aa1aee01934a7e82'
                         key: {
@@ -903,6 +1337,21 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_section'
+                        id: 'b703b7230f940310b9d1c9c530d1b213'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            caption: 'NULL'
+                            view: {
+                                id: 'Default view'
+                                key: {
+                                    name: 'NULL'
+                                }
+                            }
+                            sys_domain: 'global'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: 'b759e51e1aa24a0399974f082a8f0db4'
                         key: {
@@ -926,6 +1375,19 @@ declare global {
                             }
                             element: 'purpose'
                             position: '15'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: 'baf133af0f540310b9d1c9c530d1b27e'
+                        key: {
+                            sys_security_acl: 'b2f133af0f540310b9d1c9c530d1b279'
+                            sys_user_role: {
+                                id: 'fef133af0f540310b9d1c9c530d1b230'
+                                key: {
+                                    name: 'x_2001423_certireq.Staff'
+                                }
+                            }
                         }
                     },
                     {
@@ -968,6 +1430,19 @@ declare global {
                         key: {
                             name: 'x_2001423_certireq_customer'
                             element: 'is_regular'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: 'c2223baf0f540310b9d1c9c530d1b2be'
+                        key: {
+                            sys_security_acl: 'ce223baf0f540310b9d1c9c530d1b2b8'
+                            sys_user_role: {
+                                id: 'ad22f7af0f540310b9d1c9c530d1b291'
+                                key: {
+                                    name: 'x_2001423_certireq.User'
+                                }
+                            }
                         }
                     },
                     {
@@ -1024,6 +1499,40 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_element'
+                        id: 'd013b7230f940310b9d1c9c530d1b2cb'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'department'
+                            position: '0'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: 'd013b7230f940310b9d1c9c530d1b2d0'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.end_split'
+                            position: '6'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: 'd020c70af4554967adb6c2b73fe04efe'
                         key: {
@@ -1051,6 +1560,40 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_element'
+                        id: 'd413b7230f940310b9d1c9c530d1b2cd'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'user_type'
+                            position: '2'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: 'd413b7230f940310b9d1c9c530d1b2d8'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'password'
+                            position: '18'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: 'd6bd780d617242eab8165a25eab5c080'
                         key: {
@@ -1068,11 +1611,58 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: 'd7c17b6f0f540310b9d1c9c530d1b23b'
+                        key: {
+                            sys_security_acl: 'd7c17b6f0f540310b9d1c9c530d1b204'
+                            sys_user_role: {
+                                id: '7ec13b6f0f540310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq.Admin'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: 'd813b7230f940310b9d1c9c530d1b2d5'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'contact_number'
+                            position: '14'
+                        }
+                    },
+                    {
                         table: 'sys_choice_set'
                         id: 'daf280b0c8a24b829abbe8da2aca1872'
                         key: {
                             name: 'x_2001423_certireq_document_request'
                             element: 'urgency_level'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: 'dc13b7230f940310b9d1c9c530d1b2d2'
+                        key: {
+                            sys_ui_section: {
+                                id: 'b703b7230f940310b9d1c9c530d1b213'
+                                key: {
+                                    name: 'x_2001423_certireq_customer'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'customer_status'
+                            position: '10'
                         }
                     },
                     {
@@ -1242,6 +1832,13 @@ declare global {
                         key: {
                             name: 'x_2001423_certireq_document_request'
                             element: 'document_type'
+                        }
+                    },
+                    {
+                        table: 'sys_user_role'
+                        id: 'fef133af0f540310b9d1c9c530d1b230'
+                        key: {
+                            name: 'x_2001423_certireq.Staff'
                         }
                     },
                 ]

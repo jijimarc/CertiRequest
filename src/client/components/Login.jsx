@@ -46,7 +46,7 @@ const Login = ({ onLogin, onGoToRegister }) => {
           name: user.fullname,
           email: user.email,
           department: user.department || 'General',
-          isStaff: false, 
+          isStaff: user.user_type === 'Staff' || user.user_type === 'staff',
           avatar: null
         });
         return; 
