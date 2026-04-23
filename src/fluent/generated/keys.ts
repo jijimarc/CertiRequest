@@ -5,6 +5,46 @@ declare global {
         namespace Internal {
             interface Keys extends KeysRegistry {
                 explicit: {
+                    '11ff1b670fd00310b9d1c9c530d1b2ed': {
+                        table: 'sys_scope_privilege'
+                        id: '11ff1b670fd00310b9d1c9c530d1b2ed'
+                    }
+                    '15ff1b670fd00310b9d1c9c530d1b2f5': {
+                        table: 'sys_scope_privilege'
+                        id: '15ff1b670fd00310b9d1c9c530d1b2f5'
+                    }
+                    '15ff5b670fd00310b9d1c9c530d1b237': {
+                        table: 'sys_scope_privilege'
+                        id: '15ff5b670fd00310b9d1c9c530d1b237'
+                    }
+                    '1dff5b670fd00310b9d1c9c530d1b226': {
+                        table: 'sys_scope_privilege'
+                        id: '1dff5b670fd00310b9d1c9c530d1b226'
+                    }
+                    '51ff1b670fd00310b9d1c9c530d1b298': {
+                        table: 'sys_scope_privilege'
+                        id: '51ff1b670fd00310b9d1c9c530d1b298'
+                    }
+                    '5f8755030f988310b9d1c9c530d1b2b5': {
+                        table: 'sys_ws_definition'
+                        id: '5f8755030f988310b9d1c9c530d1b2b5'
+                    }
+                    '64bc1baf0f900310b9d1c9c530d1b2cb': {
+                        table: 'sys_ws_operation'
+                        id: '64bc1baf0f900310b9d1c9c530d1b2cb'
+                    }
+                    '69ff5b670fd00310b9d1c9c530d1b240': {
+                        table: 'sys_scope_privilege'
+                        id: '69ff5b670fd00310b9d1c9c530d1b240'
+                    }
+                    '80b71d030f988310b9d1c9c530d1b239': {
+                        table: 'sys_ws_operation'
+                        id: '80b71d030f988310b9d1c9c530d1b239'
+                    }
+                    '99ff5b670fd00310b9d1c9c530d1b21e': {
+                        table: 'sys_scope_privilege'
+                        id: '99ff5b670fd00310b9d1c9c530d1b21e'
+                    }
                     'App.css': {
                         table: 'sys_ux_theme_asset'
                         id: 'eb87fc5295c046c7bf28db94ae9bd765'
@@ -12,6 +52,18 @@ declare global {
                     bom_json: {
                         table: 'sys_module'
                         id: 'ae0e40b232db452ab162d030ea070aa1'
+                    }
+                    d1ff1b670fd00310b9d1c9c530d1b2f1: {
+                        table: 'sys_scope_privilege'
+                        id: 'd1ff1b670fd00310b9d1c9c530d1b2f1'
+                    }
+                    d9ff5b670fd00310b9d1c9c530d1b222: {
+                        table: 'sys_scope_privilege'
+                        id: 'd9ff5b670fd00310b9d1c9c530d1b222'
+                    }
+                    edeadfab0f900310b9d1c9c530d1b2fe: {
+                        table: 'sys_properties'
+                        id: 'edeadfab0f900310b9d1c9c530d1b2fe'
                     }
                     package_json: {
                         table: 'sys_module'
@@ -140,6 +192,23 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_element'
+                        id: '295451160f1c8310b9d1c9c530d1b2bb'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.split'
+                            position: '3'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: '2a1269828afe4edbb5cc0d5145721447'
                         key: {
@@ -164,6 +233,23 @@ declare global {
                             name: 'x_2001423_certireq_document_request'
                             element: 'document_type'
                             value: 'transcript'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '2d5451160f1c8310b9d1c9c530d1b2d5'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.end_split'
+                            position: '5'
                         }
                     },
                     {
@@ -193,6 +279,23 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_element'
+                        id: '315451160f1c8310b9d1c9c530d1b2de'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'student_id'
+                            position: '17'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: '32f995a6e7cd4d1f908340e298360f45'
                         key: {
@@ -206,6 +309,23 @@ declare global {
                         key: {
                             name: 'x_2001423_certireq_customer'
                             element: 'personal_email'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '355451160f1c8310b9d1c9c530d1b2db'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.end_split'
+                            position: '13'
                         }
                     },
                     {
@@ -235,6 +355,23 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_element'
+                        id: '395451160f1c8310b9d1c9c530d1b2d8'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'urgency_level'
+                            position: '9'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: '3c0d46df2f3546b297661d0ed19cb413'
                         key: {
@@ -250,6 +387,23 @@ declare global {
                             name: 'x_2001423_certireq_customer'
                             element: 'is_regular'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '3d5451160f1c8310b9d1c9c530d1b2e0'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.end_split'
+                            position: '21'
                         }
                     },
                     {
@@ -336,6 +490,23 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_element'
+                        id: '695451160f1c8310b9d1c9c530d1b2b8'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.begin_split'
+                            position: '0'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '69a25d9003ba4dc0a467975016201db9'
                         key: {
@@ -379,12 +550,46 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_element'
+                        id: '6d5451160f1c8310b9d1c9c530d1b2ba'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'status'
+                            position: '2'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: '6e6c871c87a144bcaaf4ad4a541d1f5c'
                         key: {
                             name: 'x_2001423_certireq_customer'
                             element: 'department'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '715451160f1c8310b9d1c9c530d1b2e0'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'submitted_date'
+                            position: '20'
                         }
                     },
                     {
@@ -418,6 +623,57 @@ declare global {
                         key: {
                             name: 'x_2001423_certireq_document_request'
                             element: 'customer'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '755451160f1c8310b9d1c9c530d1b2dd'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.begin_split'
+                            position: '16'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '795451160f1c8310b9d1c9c530d1b2da'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'payment_amount'
+                            position: '12'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: '7d5451160f1c8310b9d1c9c530d1b2d7'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.begin_split'
+                            position: '8'
                         }
                     },
                     {
@@ -486,6 +742,55 @@ declare global {
                         key: {
                             name: 'x_2001423_certireq_customer'
                             element: 'email'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_section'
+                        id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                        key: {
+                            name: 'x_2001423_certireq_document_request'
+                            caption: 'NULL'
+                            view: {
+                                id: 'Default view'
+                                key: {
+                                    name: 'NULL'
+                                }
+                            }
+                            sys_domain: 'global'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: 'a15451160f1c8310b9d1c9c530d1b2ba'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'document_type'
+                            position: '1'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: 'a15451160f1c8310b9d1c9c530d1b2d7'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'student_name'
+                            position: '7'
                         }
                     },
                     {
@@ -573,6 +878,23 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_element'
+                        id: 'b55451160f1c8310b9d1c9c530d1b2df'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.split'
+                            position: '19'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: 'b652636419a647068bf51b25d30ab239'
                         key: {
@@ -587,6 +909,40 @@ declare global {
                             name: 'x_2001423_certireq_document_request'
                             element: 'delivery_mode'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: 'b95451160f1c8310b9d1c9c530d1b2dc'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'purpose'
+                            position: '15'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: 'bd5451160f1c8310b9d1c9c530d1b2d9'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: '.split'
+                            position: '11'
                         }
                     },
                     {
@@ -720,12 +1076,46 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_element'
+                        id: 'e15451160f1c8310b9d1c9c530d1b2bc'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'completion_date'
+                            position: '4'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: 'e44186f8379e4574bcdecb12c11d9859'
                         key: {
                             name: 'x_2001423_certireq_document_request'
                             element: 'urgency_level'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: 'e55451160f1c8310b9d1c9c530d1b2d6'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'notes'
+                            position: '6'
                         }
                     },
                     {
@@ -745,11 +1135,45 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_ui_element'
+                        id: 'f15451160f1c8310b9d1c9c530d1b2d9'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'payment_required'
+                            position: '10'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: 'f246b24f78344e84bd8c63bd175cea96'
                         key: {
                             name: 'x_2001423_certireq_customer'
                             element: 'user_type'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: 'f55451160f1c8310b9d1c9c530d1b2e1'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'department'
+                            position: '22'
                         }
                     },
                     {
@@ -767,6 +1191,40 @@ declare global {
                             name: 'x_2001423_certireq_customer'
                             element: 'email'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: 'f95451160f1c8310b9d1c9c530d1b2de'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'delivery_mode'
+                            position: '18'
+                        }
+                    },
+                    {
+                        table: 'sys_ui_element'
+                        id: 'fd5451160f1c8310b9d1c9c530d1b2db'
+                        key: {
+                            sys_ui_section: {
+                                id: 'a15451160f1c8310b9d1c9c530d1b2b0'
+                                key: {
+                                    name: 'x_2001423_certireq_document_request'
+                                    caption: 'NULL'
+                                    view: 'Default view'
+                                    sys_domain: 'global'
+                                }
+                            }
+                            element: 'email'
+                            position: '14'
                         }
                     },
                     {

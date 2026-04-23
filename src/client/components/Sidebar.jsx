@@ -2,15 +2,20 @@ import React from 'react';
 
 const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊', badge: null },
-    { id: 'my-requests', label: 'My Requests', icon: '📋', badge: requestCount > 0 ? requestCount.toString() : null },
-    { id: 'staff-dashboard', label: 'Staff Dashboard', icon: '🛠️', badge: null },
-    { id: 'track-request', label: 'Track Request', icon: '👁️', badge: null },
-    { id: 'request-queue', label: 'Request Queue', icon: '📥', badge: null },
-    { id: 'payments', label: 'Payments', icon: '💳', badge: null },
-    { id: 'help', label: 'Help & Support', icon: '❓', badge: null },
+    { id: 'dashboard', label: 'Dashboard', icon: '📊', badge: null, showFor: 'student' },
+    { id: 'my-requests', label: 'My Requests', icon: '📋', badge: requestCount > 0 ? requestCount.toString() : null, showFor: 'student' },
+    { id: 'staff-portal', label: 'Staff Dashboard', icon: '🛠️', badge: null, showFor: 'staff' },
+    { id: 'request-queue', label: 'Request Queue', icon: '📥', badge: null, showFor: 'staff' },
+    { id: 'track-request', label: 'Track Request', icon: '👁️', badge: null, showFor: 'student' },
+    { id: 'payments', label: 'Payments', icon: '💳', badge: null, showFor: 'student' },
+    { id: 'help', label: 'Help & Support', icon: '❓', badge: null, showFor: 'all' },
   ];
 
+  const visibleMenuItems = menuItems.filter(item => {
+    if (item.showFor === 'all') return true;
+    if (user?.isStaff) return item.showFor === 'staff';
+    return item.showFor === 'student';
+  });
   return (
     <nav className="sidebar">
       <div className="sidebar-header">
@@ -24,7 +29,7 @@ const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
       </div>
 
       <div className="nav-menu">
-        {menuItems.map((item) => (
+        {visibleMenuItems.map((item) => (
           <div key={item.id} className="nav-item">
             <button
               className={`nav-link ${activeTab === item.id ? 'active' : ''}`}

@@ -6,7 +6,8 @@ import {
   URGENCY_CONFIG, 
   TRACKER_STEPS, 
   TRACKER_ORDER, 
-  filterRequests 
+  filterRequests,
+  updateRequestStatus 
 } from '../services/StaffServices';
 
 function StatusBadge({ status, large = false }) {
@@ -115,7 +116,7 @@ function DetailField({ label, value, fullWidth = false, icon }) {
   );
 }
 
-function RequestDetailsModal({ request, onClose }) {
+function RequestDetailsModal({ request, onClose, onApproveClick, onDenyClick }) {
   useEffect(() => {
     const handleKeyDown = (e) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', handleKeyDown);
@@ -123,6 +124,8 @@ function RequestDetailsModal({ request, onClose }) {
   }, [onClose]);
 
   if (!request) return null;
+
+  const isPending = (request.status || '').toLowerCase() === 'pending';
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -168,7 +171,15 @@ function RequestDetailsModal({ request, onClose }) {
           </div>
         </div>
 
-        <div style={{ padding: '14px 24px', borderTop: '1px solid #EDF2F9', background: '#F8FAFD', display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ padding: '14px 24px', borderTop: '1px solid #EDF2F9', background: '#F8FAFD', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {isPending && (
+              <>
+                <button onClick={() => onApproveClick(request)} className="action-btn btn-approve" style={{ padding: '9px 20px', fontSize: '13px' }}>✅ Approve</button>
+                <button onClick={() => onDenyClick(request)} className="action-btn btn-deny" style={{ padding: '9px 20px', fontSize: '13px' }}>❌ Reject</button>
+              </>
+            )}
+          </div>
           <button onClick={onClose} style={{ padding: '9px 20px', fontSize: '13px', fontWeight: '600', border: '1px solid #C5D7F5', borderRadius: '10px', background: '#FFFFFF', color: '#0D3B7A', cursor: 'pointer' }}>Close</button>
         </div>
       </div>
@@ -176,17 +187,17 @@ function RequestDetailsModal({ request, onClose }) {
   );
 }
 
-function ConfirmDialog({ type, request, onConfirm, onCancel }) {
+function ConfirmDialog({ type, request, onConfirm, onCancel, isProcessing }) {
   useEffect(() => {
-    const handleKeyDown = (e) => { if (e.key === 'Escape') onCancel(); };
+    const handleKeyDown = (e) => { if (e.key === 'Escape' && !isProcessing) onCancel(); };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [onCancel]);
+  }, [onCancel, isProcessing]);
 
   const isApprove = type === 'approve';
 
   return (
-    <div className="modal-overlay" onClick={onCancel}>
+    <div className="modal-overlay" onClick={() => !isProcessing && onCancel()}>
       <div className="modal-container confirm-container" onClick={e => e.stopPropagation()}>
         <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: isApprove ? '#E6FAF3' : '#FFF0F0', border: `2px solid ${isApprove ? '#A3E6C9' : '#FCA5A5'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', marginBottom: '16px' }}>
           {isApprove ? '✅' : '❌'}
@@ -198,9 +209,9 @@ function ConfirmDialog({ type, request, onConfirm, onCancel }) {
           {isApprove ? ' This will move it to the processing queue.' : ' This action cannot be undone.'}
         </p>
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-          <button onClick={onCancel} style={{ padding: '10px 20px', fontSize: '13px', fontWeight: '600', border: '1px solid #C5D7F5', borderRadius: '10px', background: '#F5F8FF', color: '#0D3B7A', cursor: 'pointer' }}>Cancel</button>
-          <button onClick={onConfirm} style={{ padding: '10px 22px', fontSize: '13px', fontWeight: '700', border: 'none', borderRadius: '10px', background: isApprove ? '#10b981' : '#ef4444', color: '#FFFFFF', cursor: 'pointer' }}>
-            {isApprove ? '✅ Confirm Approve' : '❌ Confirm Deny'}
+          <button onClick={onCancel} disabled={isProcessing} style={{ padding: '10px 20px', fontSize: '13px', fontWeight: '600', border: '1px solid #C5D7F5', borderRadius: '10px', background: '#F5F8FF', color: '#0D3B7A', cursor: isProcessing ? 'wait' : 'pointer', opacity: isProcessing ? 0.5 : 1 }}>Cancel</button>
+          <button onClick={onConfirm} disabled={isProcessing} style={{ padding: '10px 22px', fontSize: '13px', fontWeight: '700', border: 'none', borderRadius: '10px', background: isApprove ? '#10b981' : '#ef4444', color: '#FFFFFF', cursor: isProcessing ? 'wait' : 'pointer', opacity: isProcessing ? 0.5 : 1 }}>
+            {isProcessing ? 'Processing...' : (isApprove ? '✅ Confirm Approve' : '❌ Confirm Deny')}
           </button>
         </div>
       </div>
@@ -208,11 +219,12 @@ function ConfirmDialog({ type, request, onConfirm, onCancel }) {
   );
 }
 
-const RequestQueue = ({ requests = [] }) => {
+const RequestQueue = ({ requests = [], onRefresh }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
   const [selectedRequest, setSelectedRequest] = useState(null);   
-  const [confirmDialog, setConfirmDialog] = useState(null);        
+  const [confirmDialog, setConfirmDialog] = useState(null); 
+  const [isProcessing, setIsProcessing] = useState(false);       
 
   const anyModalOpen = !!selectedRequest || !!confirmDialog;
   
@@ -229,12 +241,32 @@ const RequestQueue = ({ requests = [] }) => {
   const handleCloseModal = useCallback(() => setSelectedRequest(null), []);
   const handleApproveClick = (req) => setConfirmDialog({ type: 'approve', request: req });
   const handleDenyClick = (req) => setConfirmDialog({ type: 'deny', request: req });
-  const handleConfirmAction = () => {
+
+  const handleConfirmAction = async () => {
     if (!confirmDialog) return;
+    setIsProcessing(true);
     const { type, request } = confirmDialog;
-    alert(`${type === 'approve' ? 'Approved' : 'Denied'} request ${request.number || request.id}`);
-    setConfirmDialog(null);
+    const newStatus = type === 'approve' ? 'processing' : 'cancelled';
+
+    try {
+      await updateRequestStatus(request.id, newStatus);
+      
+      // Close modals
+      setConfirmDialog(null);
+      setSelectedRequest(null);
+      
+      if (onRefresh) {
+        onRefresh();
+      } else {
+        alert(`Request updated, but please refresh the page to see changes.`);
+      }
+    } catch (error) {
+      alert(`Error updating request: ${error.message}`);
+    } finally {
+      setIsProcessing(false);
+    }
   };
+
   const handleCancelConfirm = () => setConfirmDialog(null);
   const filteredRequests = filterRequests(requests, searchTerm, filterStatus);
 
@@ -285,7 +317,6 @@ const RequestQueue = ({ requests = [] }) => {
             <tbody>
               {filteredRequests.length > 0 ? (
                 filteredRequests.map((req) => {
-                  const isPending = (req.status || '').toLowerCase() === 'pending';
                   return (
                     <tr key={req.id} className="queue-tr">
                       <td className="queue-td" style={{ fontWeight: '700', color: '#0D2850', fontFamily: "'DM Mono', monospace" }}>{req.number}</td>
@@ -299,10 +330,9 @@ const RequestQueue = ({ requests = [] }) => {
                       <td className="queue-td" style={{ color: '#6B80A3' }}>{req.dateSubmitted || '—'}</td>
                       <td className="queue-td"><UrgencyBadge urgency={req.urgency} /></td>
                       <td className="queue-td"><StatusBadge status={req.status} /></td>
+                      {/* ✅ Only the View button remains here */}
                       <td className="queue-td" style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
-                        <button className="action-btn btn-view" onClick={() => handleView(req)}>View</button>
-                        <button className="action-btn btn-approve" onClick={() => isPending && handleApproveClick(req)} disabled={!isPending}>Approve</button>
-                        <button className="action-btn btn-deny" onClick={() => isPending && handleDenyClick(req)} disabled={!isPending}>Deny</button>
+                        <button className="action-btn btn-view" onClick={() => handleView(req)}>View Details</button>
                       </td>
                     </tr>
                   );
@@ -326,8 +356,24 @@ const RequestQueue = ({ requests = [] }) => {
         </div>
       </div>
 
-      {selectedRequest && <RequestDetailsModal request={selectedRequest} onClose={handleCloseModal} />}
-      {confirmDialog && <ConfirmDialog type={confirmDialog.type} request={confirmDialog.request} onConfirm={handleConfirmAction} onCancel={handleCancelConfirm} />}
+      {selectedRequest && (
+        <RequestDetailsModal 
+          request={selectedRequest} 
+          onClose={handleCloseModal} 
+          onApproveClick={handleApproveClick} 
+          onDenyClick={handleDenyClick} 
+        />
+      )}
+      
+      {confirmDialog && (
+        <ConfirmDialog 
+          type={confirmDialog.type} 
+          request={confirmDialog.request} 
+          onConfirm={handleConfirmAction} 
+          onCancel={handleCancelConfirm} 
+          isProcessing={isProcessing}
+        />
+      )}
     </div>
   );
 };

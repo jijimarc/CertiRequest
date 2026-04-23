@@ -309,8 +309,8 @@ function App() {
         return <HelpSupport />;
       case 'staff-dashboard':
         return <StaffDashboard requests={requests} user={user} />;
-      case 'request-queue':
-        return <RequestQueue requests={requests} />;
+        case 'request-queue':
+          return <RequestQueue requests={requests} onRefresh={() => loadRequests(user)} />;
       default:
         return <Dashboard requests={requests} stats={getStats()} />;
     }

@@ -79,3 +79,34 @@ export const filterRequests = (requests, searchTerm, filterStatus) => {
 		return matchesSearch && matchesFilter;
 	});
 };
+
+// 4. API CALLS
+/**
+ * Updates the status of a document request in ServiceNow.
+ * @param {String} sysId - The ServiceNow sys_id of the record.
+ * @param {String} newStatus - The new status ('processing', 'cancelled', etc.)
+ */
+export const updateRequestStatus = async (sysId, newStatus) => {
+	try {
+	  const response = await fetch(`/api/now/table/x_2001423_certireq_document_request/${sysId}`, {
+		method: 'PATCH', // PATCH is used in ServiceNow to update existing records
+		headers: {
+		  'Content-Type': 'application/json',
+		  'Accept': 'application/json',
+		  'X-UserToken': window.g_ck || '' // ServiceNow CSRF token
+		},
+		body: JSON.stringify({
+		  status: newStatus
+		})
+	  });
+  
+	  if (!response.ok) {
+		throw new Error('ServiceNow Update Failed');
+	  }
+  
+	  return await response.json();
+	} catch (error) {
+	  console.error('Error updating request status:', error);
+	  throw error;
+	}
+  };

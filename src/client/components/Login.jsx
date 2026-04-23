@@ -19,7 +19,7 @@ const Login = ({ onLogin, onGoToRegister }) => {
         return;
       }
 
-      const response = await fetch(`/api/now/table/x_2001423_certireq_customer?sysparm_query=email=${encodeURIComponent(email)}&sysparm_limit=1`, {
+      const studentRes = await fetch(`/api/now/table/x_2001423_certireq_customer?sysparm_query=email=${encodeURIComponent(email)}&sysparm_limit=1`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -28,34 +28,56 @@ const Login = ({ onLogin, onGoToRegister }) => {
         }
       });
 
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-
-      const result = await response.json();
+      if (!studentRes.ok) throw new Error('Student query failed');
+      const studentData = await studentRes.json();
       
-      if (!result.result || result.result.length === 0) {
-        setError('Email not found');
-        setLoading(false);
-        return;
+      if (studentData.result && studentData.result.length > 0) {
+        const user = studentData.result[0];
+
+        if (user.password !== password) {
+          setError('Invalid password');
+          setLoading(false);
+          return;
+        }
+
+        onLogin({
+          id: user.sys_id,                          
+          studentIdNumber: user.student_id_number,   
+          name: user.fullname,
+          email: user.email,
+          department: user.department || 'General',
+          isStaff: false, 
+          avatar: null
+        });
+        return; 
       }
 
-      const user = result.result[0];
-
-      if (user.password !== password) {
-        setError('Invalid password');
-        setLoading(false);
-        return;
-      }
-
-      onLogin({
-        id: user.sys_id,                          
-        studentIdNumber: user.student_id_number,   
-        name: user.fullname,
-        email: user.email,
-        department: user.department || 'General',
-        avatar: null
+      const staffRes = await fetch(`/api/now/table/sys_user?sysparm_query=email=${encodeURIComponent(email)}&sysparm_limit=1`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-No-Response-Challenge': 'true'
+        }
       });
+
+      if (!staffRes.ok) throw new Error('Staff query failed');
+      const staffData = await staffRes.json();
+
+      if (staffData.result && staffData.result.length > 0) {
+        const staff = staffData.result[0];
+        onLogin({
+          id: staff.sys_id,
+          name: staff.name || `${staff.first_name} ${staff.last_name}`,
+          email: staff.email,
+          department: staff.department?.display_value || 'Administration',
+          isStaff: true, 
+          avatar: null
+        });
+        return; 
+      }
+
+      setError('Email not found in student or staff records.');
 
     } catch (error) {
       console.error('Login Error:', error);
@@ -86,7 +108,7 @@ const Login = ({ onLogin, onGoToRegister }) => {
         id: snUser.sys_id,
         name: snUser.user_name || snUser.name || 'Staff Member',
         email: snUser.email || '',
-        isStaff: true, // <-- THIS IS THE MAGIC FLAG
+        isStaff: true, 
         department: 'Registrar'
       });
 
