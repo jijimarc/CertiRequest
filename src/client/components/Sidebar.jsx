@@ -4,8 +4,9 @@ const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊', badge: null },
     { id: 'my-requests', label: 'My Requests', icon: '📋', badge: requestCount > 0 ? requestCount.toString() : null },
-    { id: 'staff-portal', label: 'Staff Dashboard', icon: '🛠️', badge: null },
+    { id: 'staff-dashboard', label: 'Staff Dashboard', icon: '🛠️', badge: null },
     { id: 'track-request', label: 'Track Request', icon: '👁️', badge: null },
+    { id: 'request-queue', label: 'Request Queue', icon: '📥', badge: null },
     { id: 'payments', label: 'Payments', icon: '💳', badge: null },
     { id: 'help', label: 'Help & Support', icon: '❓', badge: null },
   ];

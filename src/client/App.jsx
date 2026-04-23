@@ -13,6 +13,8 @@ import Toast from './components/Toast';
 import LoadingScreen from './components/LoadingScreen';
 import Register from './components/Register';
 import Login from './components/Login';
+import AIChatBot from './components/AIChatBot';
+import RequestQueue from './components/RequestQueue';
 
 function App() {
   const [view, setView] = useState('login'); 
@@ -260,7 +262,7 @@ function App() {
     setView('app');
     
     if (userData.isStaff) {
-      setActiveTab('staff-portal');
+      setActiveTab('staff-dashboard');
       loadRequests(userData); 
     } else {
       setActiveTab('dashboard'); 
@@ -305,9 +307,10 @@ function App() {
         return <Payments requests={requests} showToast={showToast} />;
       case 'help':
         return <HelpSupport />;
-      case 'staff-portal':
-        console.log('ACTIVE TAB IS STAFF PORTAL');
-        return <StaffDashboard requests={requests} />;
+      case 'staff-dashboard':
+        return <StaffDashboard requests={requests} user={user} />;
+      case 'request-queue':
+        return <RequestQueue requests={requests} />;
       default:
         return <Dashboard requests={requests} stats={getStats()} />;
     }
@@ -342,7 +345,8 @@ function App() {
                 {activeTab === 'my-requests' && 'My Requests'}
                 {activeTab === 'track-request' && 'Track Request'}
                 {activeTab === 'payments' && 'Payments'}
-                {activeTab === 'staff-portal' && 'Staff Portal'}
+                {activeTab === 'staff-dashboard' && 'Staff Dashboard'}
+                {activeTab === 'request-queue' && 'Request Queue'}
                 {activeTab === 'help' && 'Help & Support'}
               </h1>
               <p className="page-subtitle">
@@ -350,7 +354,8 @@ function App() {
                 {activeTab === 'my-requests' && 'View and manage your requests'}
                 {activeTab === 'track-request' && 'Track your request status'}
                 {activeTab === 'payments' && 'Manage your payments'}
-                {activeTab === 'staff-portal' && 'Manage and process document requests'}
+                {activeTab === 'staff-dashboard' && 'Manage and process document requests'}
+                {activeTab === 'request-queue' && 'Review and process student document requests'}
                 {activeTab === 'help' && 'Get help and support'}
               </p>
             </div>
@@ -388,6 +393,8 @@ function App() {
       {toast && <Toast {...toast} onClose={() => setToast(null)} />}
       
       {loading && <div className="loading-overlay"><div className="spinner-lg" /></div>}
+
+      <AIChatBot />
     </div>
   );
 }
