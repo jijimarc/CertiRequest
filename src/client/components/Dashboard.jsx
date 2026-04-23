@@ -133,7 +133,7 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogo
               <div className="profile-details">
                 <div className="profile-field">
                   <span className="profile-label">ID Number</span>
-                  <span className="profile-value">{user.studentIdNumber || 'No ID Provided'}</span>
+                  <span className="profile-value">{user.studentId || 'No ID Provided'}</span>
                 </div>
                 <div className="profile-field">
                   <span className="profile-label">Email</span>

@@ -6,7 +6,6 @@ const Login = ({ onLogin, onGoToRegister }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -40,13 +39,15 @@ const Login = ({ onLogin, onGoToRegister }) => {
           return;
         }
 
+        const isStaffMember = String(user.user_type).toLowerCase().includes('staff') || user.email.includes('staff');
+
         onLogin({
           id: user.sys_id,                          
           studentIdNumber: user.student_id_number,   
           name: user.fullname,
           email: user.email,
           department: user.department || 'General',
-          isStaff: user.user_type === 'Staff' || user.user_type === 'staff',
+          isStaff: isStaffMember,
           avatar: null
         });
         return; 

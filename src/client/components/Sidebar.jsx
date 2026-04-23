@@ -4,7 +4,7 @@ const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊', badge: null, showFor: 'student' },
     { id: 'my-requests', label: 'My Requests', icon: '📋', badge: requestCount > 0 ? requestCount.toString() : null, showFor: 'student' },
-    { id: 'staff-portal', label: 'Staff Dashboard', icon: '🛠️', badge: null, showFor: 'staff' },
+    { id: 'staff-dashboard', label: 'Staff Dashboard', icon: '🛠️', badge: null, showFor: 'staff' },
     { id: 'request-queue', label: 'Request Queue', icon: '📥', badge: null, showFor: 'staff' },
     { id: 'track-request', label: 'Track Request', icon: '👁️', badge: null, showFor: 'student' },
     { id: 'payments', label: 'Payments', icon: '💳', badge: null, showFor: 'student' },
@@ -50,7 +50,9 @@ const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
           </div>
           <div className="user-details">
             <div className="user-name">{user?.name || 'User'}</div>
-            <div className="user-role" style={{ textTransform: 'capitalize' }}>{user?.role || 'Student'}</div>
+            <div className="user-role" style={{ textTransform: 'capitalize' }}>
+              {user?.isStaff ? 'Staff Portal' : 'Student'}
+            </div>
           </div>
         </div>
         <button className="logout-btn">

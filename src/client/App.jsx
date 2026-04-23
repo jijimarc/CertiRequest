@@ -130,10 +130,7 @@ function App() {
       setLoading(true);
       
       const payload = {
-        student_id: requestData.studentId || user.id,      
-        student_name: requestData.studentName || user.name,
-        email: user.email,
-        department: user.department,
+        customer: user.id, // Linking the request to your Customer Profile sys_id
         document_type: requestData.documentType,
         urgency_level: requestData.urgency || 'standard',
         purpose: requestData.purpose,

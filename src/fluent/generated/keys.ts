@@ -979,6 +979,15 @@ declare global {
                     },
                     {
                         table: 'sys_choice'
+                        id: '816dbf7aac5642538a5528ca2b2d963b'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'user_type'
+                            value: 'Staff'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
                         id: '82671c834663494183ed671e5763d97e'
                         key: {
                             name: 'x_2001423_certireq_customer'
@@ -1714,6 +1723,15 @@ declare global {
                         key: {
                             name: 'x_2001423_certireq_customer'
                             element: 'password'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: 'e6f05f3e638f4a13bfd241e30637d28d'
+                        key: {
+                            name: 'x_2001423_certireq_customer'
+                            element: 'user_type'
+                            value: 'Admin'
                         }
                     },
                     {
