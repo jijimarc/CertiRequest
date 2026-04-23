@@ -105,6 +105,7 @@ export default function MyRequests({ requests, loading, service, onUpdate }) {
               <table className="requests-table">
                 <thead>
                   <tr>
+                    <th>Request ID</th>
                     <th>Document Type</th>
                     <th>Date Submitted</th>
                     <th>Status</th>
@@ -121,54 +122,50 @@ export default function MyRequests({ requests, loading, service, onUpdate }) {
                     const docType = request.documentType || 'Unknown';
 
                     return (
-                      <tr
-                        key={index}
-                        onMouseEnter={e => e.currentTarget.style.background = '#F8FBFF'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                        style={{ transition: 'background 0.15s' }}
-                      >
-                        <td style={styles.td}>
-                          <div style={styles.docTypeName}>
+                      <tr key={index} className="table-row">
+                        <td>
+                          <code style={{ background: '#EEF4FF', padding: '2px 6px', borderRadius: '4px', color: '#0D3B7A', fontWeight: 'bold' }}>
+                            {request.number}
+                          </code>
+                        </td>
+                        <td>
+                          <div className="doc-type-name">
                             {docType}
                           </div>
                           {purposeText && (
-                            <div style={styles.docTypeSub}>
+                            <div className="doc-type-sub">
                               {purposeText.length > 50 ? purposeText.substring(0, 50) + '…' : purposeText}
                             </div>
                           )}
                         </td>
 
-                        <td style={styles.td}>
-                          <span style={styles.dateText}>{formatDate(request.dateSubmitted)}</span>
+                        <td>
+                          <span className="date-text">{formatDate(request.dateSubmitted)}</span>
                         </td>
 
-                        <td style={styles.td}>
+                        <td>
                           <StatusBadge status={request.status} />
                         </td>
 
-                        <td style={{ ...styles.td, color: '#6B80A3' }}>
+                        <td className="muted-text">
                           {request.urgency || '—'}
                         </td>
 
-                        <td style={{ ...styles.td, color: '#6B80A3' }}>
+                        <td className="muted-text">
                           {request.deliveryMode || '—'}
                         </td>
 
-                        <td style={styles.tdRight}>
-                          <div style={styles.actionsCell}>
+                        <td className="align-right">
+                          <div className="actions-cell">
                             <button
-                              style={styles.btnView}
-                              onMouseEnter={e => { e.currentTarget.style.background = '#EEF4FF'; e.currentTarget.style.borderColor = '#B5D0F5'; }}
-                              onMouseLeave={e => { e.currentTarget.style.background = '#F5F8FF'; e.currentTarget.style.borderColor = '#C5D7F5'; }}
+                              className="btn-view"
                               onClick={() => alert('View details functionality would be implemented here')}
                             >
                               View
                             </button>
                             {canCancel && (
                               <button
-                                style={styles.btnCancel}
-                                onMouseEnter={e => { e.currentTarget.style.background = '#FEE2E2'; }}
-                                onMouseLeave={e => { e.currentTarget.style.background = '#FFF5F5'; }}
+                                className="btn-cancel"
                                 onClick={() => handleCancelRequest(request)}
                               >
                                 Cancel

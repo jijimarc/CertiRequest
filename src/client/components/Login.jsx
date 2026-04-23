@@ -6,6 +6,7 @@ const Login = ({ onLogin, onGoToRegister }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -18,41 +19,7 @@ const Login = ({ onLogin, onGoToRegister }) => {
         return;
       }
 
-      const studentRes = await fetch(`/api/now/table/x_2001423_certireq_customer?sysparm_query=email=${encodeURIComponent(email)}&sysparm_limit=1`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-No-Response-Challenge': 'true'
-        }
-      });
-
-      if (!studentRes.ok) throw new Error('Student query failed');
-      const studentData = await studentRes.json();
-      
-      if (studentData.result && studentData.result.length > 0) {
-        const user = studentData.result[0];
-
-        if (user.password !== password) {
-          setError('Invalid password');
-          setLoading(false);
-          return;
-        }
-
-        const isStaffMember = String(user.user_type).toLowerCase().includes('staff') || user.email.includes('staff');
-
-        onLogin({
-          id: user.sys_id,                          
-          studentIdNumber: user.student_id_number,   
-          name: user.fullname,
-          email: user.email,
-          department: user.department || 'General',
-          isStaff: isStaffMember,
-          avatar: null
-        });
-        return; 
-      }
-
+      // 1. CHECK STAFF TABLE FIRST
       const staffRes = await fetch(`/api/now/table/sys_user?sysparm_query=email=${encodeURIComponent(email)}&sysparm_limit=1`, {
         method: 'GET',
         headers: {
@@ -62,23 +29,58 @@ const Login = ({ onLogin, onGoToRegister }) => {
         }
       });
 
-      if (!staffRes.ok) throw new Error('Staff query failed');
-      const staffData = await staffRes.json();
-
-      if (staffData.result && staffData.result.length > 0) {
-        const staff = staffData.result[0];
-        onLogin({
-          id: staff.sys_id,
-          name: staff.name || `${staff.first_name} ${staff.last_name}`,
-          email: staff.email,
-          department: staff.department?.display_value || 'Administration',
-          isStaff: true, 
-          avatar: null
-        });
-        return; 
+      if (staffRes.ok) {
+        const staffData = await staffRes.json();
+        if (staffData.result && staffData.result.length > 0) {
+          const staff = staffData.result[0];
+          // For testing, we allow staff login if they exist in sys_user
+          onLogin({
+            id: staff.sys_id,
+            name: staff.name || `${staff.first_name} ${staff.last_name}`,
+            email: staff.email,
+            department: staff.department?.display_value || 'Administration',
+            isStaff: true, 
+            avatar: null
+          });
+          return; 
+        }
       }
 
-      setError('Email not found in student or staff records.');
+      // 2. CHECK STUDENT TABLE SECOND
+      const studentRes = await fetch(`/api/now/table/x_2001423_certireq_customer?sysparm_query=email=${encodeURIComponent(email)}&sysparm_limit=1`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-No-Response-Challenge': 'true'
+        }
+      });
+
+      if (studentRes.ok) {
+        const studentData = await studentRes.json();
+        if (studentData.result && studentData.result.length > 0) {
+          const user = studentData.result[0];
+
+          if (user.password !== password) {
+            setError('Invalid password');
+            setLoading(false);
+            return;
+          }
+
+          onLogin({
+            id: user.sys_id,                          
+            studentId: user.student_id_number,   
+            name: user.fullname,
+            email: user.email,
+            department: user.department || 'General',
+            isStaff: false, 
+            avatar: null
+          });
+          return; 
+        }
+      }
+
+      setError('Email not found in our records.');
 
     } catch (error) {
       console.error('Login Error:', error);

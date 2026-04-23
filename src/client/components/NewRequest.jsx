@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { AIService } from '../services/AIService';
 
-export default function NewRequest({ onClose, onSubmit, loading: parentLoading }) {
+export default function NewRequest({ user, onClose, onSubmit, loading: parentLoading }) {
   const [formData, setFormData] = useState({
-    studentName: '',
-    studentId: '',
+    studentName: user?.name || '',
+    studentId: user?.studentId || '',
     documentType: '',
     urgency: 'standard',
     purpose: '',
@@ -154,10 +154,9 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
                   type="text"
                   name="studentName"
                   value={formData.studentName}
-                  onChange={handleInputChange}
                   className="form-input"
-                  placeholder="e.g. John Doe"
-                  required
+                  style={{ backgroundColor: '#f8fafc', cursor: 'not-allowed' }}
+                  readOnly
                 />
               </div>
 
@@ -168,10 +167,9 @@ export default function NewRequest({ onClose, onSubmit, loading: parentLoading }
                   type="text"
                   name="studentId"
                   value={formData.studentId}
-                  onChange={handleInputChange}
                   className="form-input"
-                  placeholder="e.g. STU001"
-                  required
+                  style={{ backgroundColor: '#f8fafc', cursor: 'not-allowed' }}
+                  readOnly
                 />
               </div>
 

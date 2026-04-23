@@ -34,17 +34,24 @@ function App() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
+        const savedSession = localStorage.getItem('certireq_user');
+        if (savedSession) {
+          const parsedUser = JSON.parse(savedSession);
+          setUser(parsedUser);
+          setView('app');
+          setActiveTab(parsedUser.isStaff ? 'staff-dashboard' : 'dashboard');
+          setLoading(false);
+          loadRequests(parsedUser);
+          return; 
+        }
+
         const userResponse = await fetch('/api/now/ui/userinfo', {
           headers: {
+            'Accept': 'application/json',
             'X-No-Response-Challenge': 'true'
           }
         });
         
-        if (userResponse.status === 401) {
-          window.location.href = '/login.do?sysparm_goto_url=' + encodeURIComponent(window.location.href);
-          return;
-        }
-
         if (userResponse.ok) {
           const userData = await userResponse.json();
           setUser({
@@ -52,19 +59,34 @@ function App() {
             name: userData.result.user_name,
             email: userData.result.user_email,
             department: userData.result.user_department || 'General',
-            avatar: null
+            avatar: null,
+            isStaff: true 
           });
+          setView('app');
+          setActiveTab('staff-dashboard');
         }
       } catch (err) {
         console.warn('Could not fetch user info, using guest profile');
       } finally {
         setLoading(false);
-        loadRequests();
+        if (!localStorage.getItem('certireq_user')) {
+          loadRequests();
+        }
       }
     };
 
     initializeApp();
   }, []);
+
+  useEffect(() => {
+    if (view === 'app' && user?.id) {
+      const pollInterval = setInterval(() => {
+        loadRequests(user);
+      }, 10000); 
+
+      return () => clearInterval(pollInterval);
+    }
+  }, [view, user]);
 
   useEffect(() => {
     if (showNewRequestModal) {
@@ -97,24 +119,43 @@ function App() {
       
       const result = await response.json();
       
-      const mappedRequests = result.result.map(record => ({
-        id: record.sys_id?.value || record.sys_id,
-        number: record.number?.value || record.number || (record.sys_id?.value || record.sys_id).substring(0, 8).toUpperCase(),
-        userName: record.customer?.display_value || 'Unknown Customer',
-        studentId: record.student_id_number?.display_value || record.student_id_number || '', 
-        email: record.email?.display_value || record.email || '',
-        contactNumber: record.contact_number?.display_value || record.contact_number || '',
-        userType: record.user_type?.display_value || record.user_type || 'student',
-        documentType: record.document_type?.display_value || record.document_type || 'Unknown Document',
-        dateSubmitted: record.submitted_date?.display_value || record.submitted_date || record.sys_created_on?.value || record.sys_created_on,
-        status: record.status?.value || record.status || 'pending',
-        purpose: record.purpose?.display_value || record.purpose,
-        deliveryMode: record.delivery_mode?.display_value || record.delivery_mode,
-        urgency: record.urgency_level?.display_value || record.urgency_level,
-        fee: parseFloat(record.payment_amount?.value || record.payment_amount) || 0,
-        progress: (record.status?.value || record.status) === 'completed' ? 100 : 
-                 ((record.status?.value || record.status) === 'processing' ? 50 : 10)
-      }));
+      const mappedRequests = result.result.map(record => {
+        const getVal = (field, fallback = '') => {
+          if (!field) return fallback;
+          if (typeof field === 'object') return field.display_value || field.value || fallback;
+          return field;
+        };
+
+        const sysId = typeof record.sys_id === 'object' ? record.sys_id.value : record.sys_id;
+
+        return {
+          id: sysId,
+          number: getVal(record.tracking_id) || getVal(record.number) || sysId.substring(0, 8).toUpperCase(),
+          userName: getVal(record.fullname) || 
+                    getVal(record.u_fullname) || 
+                    getVal(record.customer) || 
+                    getVal(record.u_customer) || 
+                    getVal(record.requested_for) || 
+                    getVal(record.u_requested_for) || 
+                    getVal(record.sys_created_by) || 
+                    'Unknown Student',
+          studentId: getVal(record.student_id_number),
+          email: getVal(record.email),
+          contactNumber: getVal(record.contact_number),
+          userType: getVal(record.user_type, 'student'),
+          documentType: getVal(record.document_type, 'Unknown Document'),
+          dateSubmitted: getVal(record.submitted_date) || getVal(record.sys_created_on),
+          status: typeof record.status === 'object' ? record.status.value : (record.status || 'pending'),
+          purpose: getVal(record.purpose),
+          deliveryMode: getVal(record.delivery_mode),
+          urgency: getVal(record.urgency_level),
+          paymentStatus: (typeof record.payment_required === 'object' ? record.payment_required.value : record.payment_required) || 
+                         (typeof record.payment_status === 'object' ? record.payment_status.value : record.payment_status) || 'pending',
+          fee: parseFloat(getVal(record.payment_amount)) || 0,
+          progress: (typeof record.status === 'object' ? record.status.value : record.status) === 'completed' ? 100 : 
+                   ((typeof record.status === 'object' ? record.status.value : record.status) === 'processing' ? 50 : 10)
+        };
+      });
 
       setRequests(mappedRequests);
     } catch (error) {
@@ -129,8 +170,11 @@ function App() {
     try {
       setLoading(true);
       
+      const generatedId = 'REQ-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      
       const payload = {
-        customer: user.id, // Linking the request to your Customer Profile sys_id
+        customer: user.id,
+        tracking_id: generatedId,
         document_type: requestData.documentType,
         urgency_level: requestData.urgency || 'standard',
         purpose: requestData.purpose,
@@ -155,6 +199,7 @@ function App() {
       const newRecord = {
         id: result.result.sys_id,
         ...requestData,
+        number: generatedId,
         dateSubmitted: new Date().toISOString().split('T')[0],
         status: 'pending',
         progress: 10
@@ -162,7 +207,7 @@ function App() {
       
       setRequests(prev => [newRecord, ...prev]);
       setShowNewRequestModal(false);
-      showToast('Request submitted to ServiceNow!', 'success');
+      showToast(`Success! Your Request ID is: ${generatedId}. Please save it for tracking.`, 'success');
       
     } catch (error) {
       console.error('Submission Error:', error);
@@ -179,6 +224,38 @@ function App() {
       setShowNewRequestModal(false);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePaymentComplete = async (requestId) => {
+    try {
+      const response = await fetch(`/api/now/table/x_2001423_certireq_document_request/${requestId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-UserToken': window.g_ck || ''
+        },
+        body: JSON.stringify({
+          payment_required: 'paid',
+          payment_status: 'paid',
+          status: 'processing' 
+        })
+      });
+
+      if (!response.ok) throw new Error('Payment Update Failed');
+      
+      setRequests(prev => prev.map(req => 
+        req.id === requestId 
+          ? { ...req, paymentStatus: 'paid', status: 'processing', progress: 50 } 
+          : req
+      ));
+      
+      showToast('Payment confirmed! Processing started.', 'success');
+      loadRequests();
+    } catch (error) {
+      console.error('Payment Error:', error);
+      throw error;
     }
   };
 
@@ -218,6 +295,7 @@ function App() {
       
       setUser({
         id: result.result.sys_id,
+        studentId: registerData.student_id_number,
         name: registerData.fullname,
         email: registerData.email,
         department: registerData.department || 'General',
@@ -241,13 +319,8 @@ function App() {
   };
 
   const handleLogout = () => {
-    setUser({
-      id: '',
-      name: '',
-      email: '',
-      department: '',
-      avatar: null
-    });
+    localStorage.removeItem('certireq_user'); 
+    setUser({ id: '', name: '', email: '', department: '', avatar: null });
     setView('login');
     setActiveTab('dashboard');
     setRequests([]);
@@ -256,10 +329,11 @@ function App() {
 
   const handleLogin = (userData) => {
     setUser(userData);
+    localStorage.setItem('certireq_user', JSON.stringify(userData));
     setView('app');
     
     if (userData.isStaff) {
-      setActiveTab('staff-dashboard');
+      setActiveTab('staff-dashboard'); 
       loadRequests(userData); 
     } else {
       setActiveTab('dashboard'); 
@@ -301,7 +375,7 @@ function App() {
       case 'track-request':
         return <TrackRequest requests={requests} />;
       case 'payments':
-        return <Payments requests={requests} showToast={showToast} />;
+        return <Payments requests={requests} onPaymentComplete={handlePaymentComplete} />;
       case 'help':
         return <HelpSupport />;
       case 'staff-dashboard':
@@ -331,6 +405,7 @@ function App() {
         activeTab={activeTab} 
         setActiveTab={setActiveTab}
         user={user}
+        onLogout={handleLogout}
       />
       
       <main className="main-content">
@@ -357,18 +432,24 @@ function App() {
               </p>
             </div>
             <div className="header-actions">
-              <button 
-                className="btn btn-primary"
-                onClick={() => setShowNewRequestModal(true)}
-              >
-                <span className="btn-icon">+</span>
-                New Request
-              </button>
+              {!user?.isStaff && (
+                <button 
+                  className="btn btn-primary"
+                  onClick={() => setShowNewRequestModal(true)}
+                >
+                  <span className="btn-icon">+</span>
+                  New Request
+                </button>
+              )}
               <div className="user-profile">
                 <div className="user-avatar">
                   <span className="avatar-initials">
-                    {user.name.split(' ').map(n => n[0]).join('')}
+                    {user?.name?.split(' ').map(n => n[0]).join('') || 'U'}
                   </span>
+                </div>
+                <div className="user-info-text">
+                  <span className="user-name-small">{user?.name}</span>
+                  <span className="user-role-small">{user?.isStaff ? 'Staff' : 'Student'}</span>
                 </div>
               </div>
             </div>
@@ -382,6 +463,7 @@ function App() {
 
       {showNewRequestModal && (
         <NewRequest 
+          user={user}
           onClose={() => setShowNewRequestModal(false)} 
           onSubmit={handleNewRequest}
         />

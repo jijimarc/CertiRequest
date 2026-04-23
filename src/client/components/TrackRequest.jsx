@@ -269,7 +269,7 @@ const IconCheck = () => (
   </svg>
 );
 
-export default function TrackRequest({ service }) {
+export default function TrackRequest() {
   const [trackingId, setTrackingId] = useState('');
   const [request, setRequest] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -282,10 +282,24 @@ export default function TrackRequest({ service }) {
     setError('');
     setRequest(null);
     try {
-      const result = await service.getById(trackingId.trim());
-      setRequest(result);
+      const response = await fetch(`/api/now/table/x_2001423_certireq_document_request?sysparm_query=tracking_id=${trackingId.trim()}&sysparm_limit=1&sysparm_display_value=all`, {
+        headers: {
+          'Accept': 'application/json',
+          'X-No-Response-Challenge': 'true'
+        }
+      });
+      
+      if (!response.ok) throw new Error('Search failed');
+      
+      const result = await response.json();
+      
+      if (result.result && result.result.length > 0) {
+        setRequest(result.result[0]);
+      } else {
+        setError('Request ID not found. Please double check the ID and try again.');
+      }
     } catch (err) {
-      setError('Request not found or you do not have permission to view it.');
+      setError('An error occurred while tracking. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -300,7 +314,7 @@ export default function TrackRequest({ service }) {
   const getValue = (field) =>
     typeof field === 'object' ? (field?.display_value ?? field?.value ?? '—') : (field ?? '—');
 
-  const currentStatus = getValue(request?.status)?.toLowerCase();
+  const currentStatus = (typeof request?.status === 'object' ? request?.status?.value : request?.status)?.toLowerCase();
   const cfg = statusConfig[currentStatus] || statusConfig.pending;
 
   return (
@@ -433,20 +447,10 @@ export default function TrackRequest({ service }) {
                   <p style={S.detailValue}>{getValue(request.urgency_level)}</p>
                 </div>
                 <div style={S.detailItem}>
-                  <p style={S.detailLabel}>Submitted Date</p>
-                  <p style={S.detailValue}>{formatDate(request.submitted_date)}</p>
-                </div>
-                <div style={S.detailItem}>
                   <p style={S.detailLabel}>Delivery Mode</p>
                   <p style={S.detailValue}>{getValue(request.delivery_mode)}</p>
                 </div>
-                {request.completion_date && (
-                  <div style={S.detailItem}>
-                    <p style={S.detailLabel}>Completion Date</p>
-                    <p style={S.detailValue}>{formatDate(request.completion_date)}</p>
-                  </div>
-                )}
-                <div style={request.completion_date ? S.detailItem : S.detailItemFull}>
+                <div style={S.detailItemFull}>
                   <p style={S.detailLabel}>Purpose</p>
                   <p style={S.detailValue}>{getValue(request.purpose)}</p>
                 </div>

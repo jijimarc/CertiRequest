@@ -15,7 +15,6 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogo
         </div>
       </div>
 
-      {/* Stats Grid */}
       <div className="stats-grid">
         <div className="stat-card total">
           <div className="stat-header">
@@ -86,12 +85,12 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogo
                     {request.documentType?.includes('Certificate') && '🎓'}
                     {request.documentType?.includes('Verification') && '📋'}
                   </div>
-                  <div className="request-info">
-                    <div className="request-title">{request.documentType}</div>
-                    <div className="request-meta">
-                      Submitted on {new Date(request.dateSubmitted).toLocaleDateString()}
+                    <div className="request-info">
+                      <div className="request-title">{request.documentType}</div>
+                      <div className="request-meta">
+                        ID: <span style={{ fontWeight: 'bold', color: '#0D3B7A' }}>{request.number}</span> • Submitted on {request.dateSubmitted ? new Date(request.dateSubmitted).toLocaleDateString() : 'Pending'}
+                      </div>
                     </div>
-                  </div>
                   <div className="request-status">
                     <span className={`status-badge ${request.status}`}>
                       <span className="status-indicator"></span>
@@ -133,7 +132,7 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogo
               <div className="profile-details">
                 <div className="profile-field">
                   <span className="profile-label">ID Number</span>
-                  <span className="profile-value">{user.studentId || 'No ID Provided'}</span>
+                  <span className="profile-value">{user?.studentId || 'No ID Provided'}</span>
                 </div>
                 <div className="profile-field">
                   <span className="profile-label">Email</span>

@@ -86,6 +86,10 @@ export const x_2001423_certireq_document_request = Table({
     notes: StringColumn({ 
       label: 'Notes', 
       maxLength: 1000 
+    }),
+    tracking_id: StringColumn({
+      label: 'Tracking ID',
+      maxLength: 20
     })
   },
   display: 'document_type',

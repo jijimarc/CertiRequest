@@ -10,6 +10,8 @@ import {
   updateRequestStatus 
 } from '../services/StaffServices';
 
+// --- SUB-COMPONENTS ---
+
 function StatusBadge({ status, large = false }) {
   const key = (status || '').toLowerCase();
   const cfg = STATUS_CONFIG[key] || { bg: '#f3f4f6', color: '#374151', border: '1px solid #d1d5db', dot: '#9ca3af', label: status || 'Unknown' };
@@ -125,7 +127,10 @@ function RequestDetailsModal({ request, onClose, onApproveClick, onDenyClick }) 
 
   if (!request) return null;
 
-  const isPending = (request.status || '').toLowerCase() === 'pending';
+  const status = (request.status || '').toLowerCase();
+  const isPending = status === 'pending';
+  const isCurrentlyProcessing = status === 'processing';
+  const isReady = status === 'ready';
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -154,7 +159,6 @@ function RequestDetailsModal({ request, onClose, onApproveClick, onDenyClick }) 
           <div style={{ margin: '16px 24px 0', borderTop: '1px solid #EDF2F9' }} />
           
           <div style={{ padding: '16px 24px 0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-            <DetailField label="Student ID" value={request.studentId || request.student_id || '—'} icon="🎓" />
             <DetailField label="Email" value={request.email || request.userEmail || '—'} icon="✉️" />
             <DetailField label="Document Type" value={request.documentType || '—'} icon="📄" />
             <DetailField label="Date Requested" value={request.dateSubmitted || '—'} icon="📅" />
@@ -175,9 +179,15 @@ function RequestDetailsModal({ request, onClose, onApproveClick, onDenyClick }) 
           <div style={{ display: 'flex', gap: '10px' }}>
             {isPending && (
               <>
-                <button onClick={() => onApproveClick(request)} className="action-btn btn-approve" style={{ padding: '9px 20px', fontSize: '13px' }}>✅ Approve</button>
+                <button onClick={() => onApproveClick(request, 'processing')} className="action-btn btn-approve" style={{ padding: '9px 20px', fontSize: '13px' }}>✅ Approve</button>
                 <button onClick={() => onDenyClick(request)} className="action-btn btn-deny" style={{ padding: '9px 20px', fontSize: '13px' }}>❌ Reject</button>
               </>
+            )}
+            {isCurrentlyProcessing && (
+              <button onClick={() => onApproveClick(request, 'ready')} className="action-btn btn-approve" style={{ padding: '9px 20px', fontSize: '13px', background: '#3b82f6' }}>📦 Mark as Ready</button>
+            )}
+            {isReady && (
+              <button onClick={() => onApproveClick(request, 'completed')} className="action-btn btn-approve" style={{ padding: '9px 20px', fontSize: '13px', background: '#059669' }}>🏁 Mark as Delivered</button>
             )}
           </div>
           <button onClick={onClose} style={{ padding: '9px 20px', fontSize: '13px', fontWeight: '600', border: '1px solid #C5D7F5', borderRadius: '10px', background: '#FFFFFF', color: '#0D3B7A', cursor: 'pointer' }}>Close</button>
@@ -187,7 +197,7 @@ function RequestDetailsModal({ request, onClose, onApproveClick, onDenyClick }) 
   );
 }
 
-function ConfirmDialog({ type, request, onConfirm, onCancel, isProcessing }) {
+function ConfirmDialog({ type, request, onConfirm, onCancel, isProcessing, targetStatus }) {
   useEffect(() => {
     const handleKeyDown = (e) => { if (e.key === 'Escape' && !isProcessing) onCancel(); };
     document.addEventListener('keydown', handleKeyDown);
@@ -195,23 +205,39 @@ function ConfirmDialog({ type, request, onConfirm, onCancel, isProcessing }) {
   }, [onCancel, isProcessing]);
 
   const isApprove = type === 'approve';
+  
+  let title = isApprove ? 'Approve Request?' : 'Deny Request?';
+  let message = isApprove ? 'This will move it to the processing queue.' : 'This action cannot be undone.';
+  let btnText = isApprove ? '✅ Confirm Approve' : '❌ Confirm Deny';
+  let btnColor = isApprove ? '#10b981' : '#ef4444';
+
+  if (targetStatus === 'ready') {
+    title = 'Mark as Ready?';
+    message = 'This will notify the student that the document is ready for pickup.';
+    btnText = '📦 Confirm Ready';
+    btnColor = '#3b82f6';
+  } else if (targetStatus === 'completed') {
+    title = 'Mark as Delivered?';
+    message = 'This will mark the request as delivered to the student and finalize it.';
+    btnText = '🏁 Confirm Delivered';
+    btnColor = '#059669';
+  }
 
   return (
     <div className="modal-overlay" onClick={() => !isProcessing && onCancel()}>
       <div className="modal-container confirm-container" onClick={e => e.stopPropagation()}>
         <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: isApprove ? '#E6FAF3' : '#FFF0F0', border: `2px solid ${isApprove ? '#A3E6C9' : '#FCA5A5'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', marginBottom: '16px' }}>
-          {isApprove ? '✅' : '❌'}
+          {targetStatus === 'ready' ? '📦' : targetStatus === 'completed' ? '🏁' : (isApprove ? '✅' : '❌')}
         </div>
-        <h3 style={{ fontSize: '17px', fontWeight: '800', color: '#0D2850', margin: '0 0 8px' }}>{isApprove ? 'Approve Request?' : 'Deny Request?'}</h3>
+        <h3 style={{ fontSize: '17px', fontWeight: '800', color: '#0D2850', margin: '0 0 8px' }}>{title}</h3>
         <p style={{ fontSize: '13.5px', color: '#6B80A3', lineHeight: '1.6', margin: '0 0 20px' }}>
-          {isApprove ? 'You are about to approve request ' : 'You are about to deny request '}
-          <strong style={{ color: '#0D2850' }}>{request?.number || request?.id}</strong> from <strong style={{ color: '#0D2850' }}>{request?.userName}</strong>.
-          {isApprove ? ' This will move it to the processing queue.' : ' This action cannot be undone.'}
+          You are about to update request <strong style={{ color: '#0D2850' }}>{request?.number || request?.id}</strong> from <strong style={{ color: '#0D2850' }}>{request?.userName}</strong>.
+          <br />{message}
         </p>
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
           <button onClick={onCancel} disabled={isProcessing} style={{ padding: '10px 20px', fontSize: '13px', fontWeight: '600', border: '1px solid #C5D7F5', borderRadius: '10px', background: '#F5F8FF', color: '#0D3B7A', cursor: isProcessing ? 'wait' : 'pointer', opacity: isProcessing ? 0.5 : 1 }}>Cancel</button>
-          <button onClick={onConfirm} disabled={isProcessing} style={{ padding: '10px 22px', fontSize: '13px', fontWeight: '700', border: 'none', borderRadius: '10px', background: isApprove ? '#10b981' : '#ef4444', color: '#FFFFFF', cursor: isProcessing ? 'wait' : 'pointer', opacity: isProcessing ? 0.5 : 1 }}>
-            {isProcessing ? 'Processing...' : (isApprove ? '✅ Confirm Approve' : '❌ Confirm Deny')}
+          <button onClick={onConfirm} disabled={isProcessing} style={{ padding: '10px 22px', fontSize: '13px', fontWeight: '700', border: 'none', borderRadius: '10px', background: btnColor, color: '#FFFFFF', cursor: isProcessing ? 'wait' : 'pointer', opacity: isProcessing ? 0.5 : 1 }}>
+            {isProcessing ? 'Processing...' : btnText}
           </button>
         </div>
       </div>
@@ -219,12 +245,16 @@ function ConfirmDialog({ type, request, onConfirm, onCancel, isProcessing }) {
   );
 }
 
+// --- MAIN COMPONENT ---
+
 const RequestQueue = ({ requests = [], onRefresh }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
   const [selectedRequest, setSelectedRequest] = useState(null);   
   const [confirmDialog, setConfirmDialog] = useState(null); 
   const [isProcessing, setIsProcessing] = useState(false);       
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const anyModalOpen = !!selectedRequest || !!confirmDialog;
   
@@ -239,27 +269,20 @@ const RequestQueue = ({ requests = [], onRefresh }) => {
 
   const handleView = useCallback((req) => setSelectedRequest(req), []);
   const handleCloseModal = useCallback(() => setSelectedRequest(null), []);
-  const handleApproveClick = (req) => setConfirmDialog({ type: 'approve', request: req });
-  const handleDenyClick = (req) => setConfirmDialog({ type: 'deny', request: req });
+  const handleApproveClick = (req, targetStatus = 'processing') => setConfirmDialog({ type: 'approve', request: req, targetStatus });
+  const handleDenyClick = (req) => setConfirmDialog({ type: 'deny', request: req, targetStatus: 'cancelled' });
+  const handleCancelConfirm = () => setConfirmDialog(null);
 
   const handleConfirmAction = async () => {
     if (!confirmDialog) return;
     setIsProcessing(true);
-    const { type, request } = confirmDialog;
-    const newStatus = type === 'approve' ? 'processing' : 'cancelled';
+    const { request, targetStatus } = confirmDialog;
 
     try {
-      await updateRequestStatus(request.id, newStatus);
-      
-      // Close modals
+      await updateRequestStatus(request.id, targetStatus);
       setConfirmDialog(null);
       setSelectedRequest(null);
-      
-      if (onRefresh) {
-        onRefresh();
-      } else {
-        alert(`Request updated, but please refresh the page to see changes.`);
-      }
+      if (onRefresh) onRefresh();
     } catch (error) {
       alert(`Error updating request: ${error.message}`);
     } finally {
@@ -267,82 +290,105 @@ const RequestQueue = ({ requests = [], onRefresh }) => {
     }
   };
 
-  const handleCancelConfirm = () => setConfirmDialog(null);
   const filteredRequests = filterRequests(requests, searchTerm, filterStatus);
+  const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedRequests = filteredRequests.slice(startIndex, startIndex + itemsPerPage);
+
+  const goToPage = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="staff-container">
-      <div style={{ marginBottom: '24px' }}>
-        <h2 className="queue-header-title">Request Queue</h2>
-        <p className="queue-header-subtitle">Manage, approve, and process student document requests</p>
-      </div>
-
-      <div className="queue-card">
+      <div className="queue-card" style={{ marginBottom: '24px' }}>
         <div className="filter-section">
-          <div style={{ display: 'flex', flex: 1, gap: '10px', alignItems: 'center' }}>
-            <span style={{ fontSize: '18px', flexShrink: 0 }}>🔍</span>
+          <div style={{ display: 'flex', flex: 1, gap: '12px', alignItems: 'center' }}>
+            <span style={{ fontSize: '18px', color: '#8A9BBE' }}>🔍</span>
             <input
               type="text"
               className="search-input"
-              placeholder="Search by Request ID or Name..."
+              placeholder="Search by ID, Name or Document..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
+              style={{ border: 'none', background: 'transparent', padding: '12px 0' }}
             />
           </div>
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <span style={{ fontSize: '13px', fontWeight: '600', color: '#4b5563' }}>Status:</span>
-            <select className="status-select" value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center', paddingLeft: '16px', borderLeft: '1.5px solid #EDF2F9' }}>
+            <span style={{ fontSize: '13px', fontWeight: '700', color: '#8A9BBE', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</span>
+            <select 
+              className="status-select" 
+              value={filterStatus} 
+              onChange={e => setFilterStatus(e.target.value)}
+              style={{ border: 'none', background: 'transparent', fontWeight: '600' }}
+            >
               <option value="All">All Statuses</option>
               <option value="Pending">Pending</option>
               <option value="Verified">Verified</option>
               <option value="Processing">Processing</option>
-              <option value="Completed">Completed</option>
+              <option value="Ready">Ready</option>
+              <option value="Completed">Delivered</option>
             </select>
           </div>
         </div>
+      </div>
 
+      <div className="queue-card" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         <div style={{ overflowX: 'auto' }}>
-          <table className="queue-table">
+          <table className="staff-table">
             <thead>
               <tr>
-                <th className="queue-th">Request ID</th>
-                <th className="queue-th">User Name</th>
-                <th className="queue-th">Document Type</th>
-                <th className="queue-th">Date Requested</th>
-                <th className="queue-th">Urgency</th>
-                <th className="queue-th">Status</th>
-                <th className="queue-th" style={{ textAlign: 'right' }}>Actions</th>
+                <th>Request Info</th>
+                <th>Student</th>
+                <th>Document</th>
+                <th>Requested On</th>
+                <th>Urgency</th>
+                <th>Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredRequests.length > 0 ? (
-                filteredRequests.map((req) => {
-                  return (
-                    <tr key={req.id} className="queue-tr">
-                      <td className="queue-td" style={{ fontWeight: '700', color: '#0D2850', fontFamily: "'DM Mono', monospace" }}>{req.number}</td>
-                      <td className="queue-td">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <Avatar name={req.userName} size={30} />
-                          <span style={{ fontWeight: '600', color: '#0D2850' }}>{req.userName}</span>
-                        </div>
-                      </td>
-                      <td className="queue-td" style={{ fontWeight: '600', color: '#0D2850' }}>{req.documentType || '—'}</td>
-                      <td className="queue-td" style={{ color: '#6B80A3' }}>{req.dateSubmitted || '—'}</td>
-                      <td className="queue-td"><UrgencyBadge urgency={req.urgency} /></td>
-                      <td className="queue-td"><StatusBadge status={req.status} /></td>
-                      {/* ✅ Only the View button remains here */}
-                      <td className="queue-td" style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
-                        <button className="action-btn btn-view" onClick={() => handleView(req)}>View Details</button>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
+              {paginatedRequests.length > 0 ? paginatedRequests.map(req => (
+                <tr key={req.id}>
+                  <td>
+                    <span style={{ 
+                      fontFamily: "'DM Mono', monospace", 
+                      fontSize: '11px', 
+                      fontWeight: '700', 
+                      color: '#0D3B7A',
+                      background: '#F1F5F9',
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      border: '1px solid #E2E8F0'
+                    }}>
+                      {req.number || req.id}
+                    </span>
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <Avatar name={req.userName} size={36} />
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ fontSize: '14px', fontWeight: '700', color: '#0D2850' }}>{req.userName}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span style={{ fontSize: '13.5px', color: '#0D2850', fontWeight: '600' }}>{req.documentType}</span></td>
+                  <td>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span style={{ fontSize: '12.5px', color: '#3A506F', fontWeight: '500' }}>{req.dateSubmitted}</span>
+                    </div>
+                  </td>
+                  <td><UrgencyBadge urgency={req.urgency} /></td>
+                  <td><StatusBadge status={req.status} /></td>
+                  <td style={{ textAlign: 'right' }}>
+                    <button onClick={() => handleView(req)} className="btn-view-staff">View Details</button>
+                  </td>
+                </tr>
+              )) : (
                 <tr>
-                  <td colSpan="7" className="queue-td" style={{ textAlign: 'center', padding: '56px', color: '#8A9BBE' }}>
-                    <div style={{ fontSize: '36px', marginBottom: '12px' }}>📭</div>
-                    <p style={{ fontWeight: '600', color: '#0D2850', marginBottom: '4px' }}>No requests found</p>
-                    <p style={{ fontSize: '13px' }}>Try adjusting your search or filter criteria.</p>
+                  <td colSpan="7" style={{ textAlign: 'center', padding: '60px 0', color: '#6B80A3' }}>
+                    No requests found matching your search.
                   </td>
                 </tr>
               )}
@@ -350,9 +396,50 @@ const RequestQueue = ({ requests = [], onRefresh }) => {
           </table>
         </div>
 
-        <div className="queue-footer">
-          Showing <strong style={{ color: '#0D3B7A' }}>{filteredRequests.length}</strong> of{' '}
-          <strong style={{ color: '#0D3B7A' }}>{requests.length}</strong> requests
+        <div className="queue-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>
+            Showing <strong style={{ color: '#0D3B7A' }}>{paginatedRequests.length}</strong> of{' '}
+            <strong style={{ color: '#0D3B7A' }}>{filteredRequests.length}</strong> requests
+          </span>
+          
+          {totalPages > 1 && (
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <button 
+                onClick={() => goToPage(currentPage - 1)} 
+                disabled={currentPage === 1}
+                className="btn btn-secondary"
+                style={{ padding: '6px 12px', fontSize: '12px', opacity: currentPage === 1 ? 0.5 : 1 }}
+              >
+                Previous
+              </button>
+              
+              <div style={{ display: 'flex', gap: '4px' }}>
+                {[...Array(totalPages)].map((_, i) => (
+                  <button 
+                    key={i + 1}
+                    onClick={() => goToPage(i + 1)}
+                    style={{
+                      width: '30px', height: '30px', borderRadius: '6px', border: 'none',
+                      background: currentPage === i + 1 ? '#0D3B7A' : '#F1F5F9',
+                      color: currentPage === i + 1 ? 'white' : '#64748B',
+                      fontWeight: '700', cursor: 'pointer', fontSize: '12px'
+                    }}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+
+              <button 
+                onClick={() => goToPage(currentPage + 1)} 
+                disabled={currentPage === totalPages}
+                className="btn btn-secondary"
+                style={{ padding: '6px 12px', fontSize: '12px', opacity: currentPage === totalPages ? 0.5 : 1 }}
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -369,6 +456,7 @@ const RequestQueue = ({ requests = [], onRefresh }) => {
         <ConfirmDialog 
           type={confirmDialog.type} 
           request={confirmDialog.request} 
+          targetStatus={confirmDialog.targetStatus}
           onConfirm={handleConfirmAction} 
           onCancel={handleCancelConfirm} 
           isProcessing={isProcessing}

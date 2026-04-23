@@ -540,6 +540,15 @@ declare global {
                     },
                     {
                         table: 'sys_documentation'
+                        id: '3b7623c8befb4270805f55aa4a9cf32b'
+                        key: {
+                            name: 'x_2001423_certireq_document_request'
+                            element: 'tracking_id'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
                         id: '3c0d46df2f3546b297661d0ed19cb413'
                         key: {
                             name: 'x_2001423_certireq_document_request'
@@ -1487,6 +1496,14 @@ declare global {
                             name: 'x_2001423_certireq_document_request'
                             element: 'document_type'
                             value: 'certificate'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'ca160a5526b54210a52b081936b84010'
+                        key: {
+                            name: 'x_2001423_certireq_document_request'
+                            element: 'tracking_id'
                         }
                     },
                     {

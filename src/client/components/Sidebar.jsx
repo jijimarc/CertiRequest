@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
+const Sidebar = ({ activeTab, setActiveTab, user, onLogout, requestCount = 0 }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊', badge: null, showFor: 'student' },
     { id: 'my-requests', label: 'My Requests', icon: '📋', badge: requestCount > 0 ? requestCount.toString() : null, showFor: 'student' },
@@ -50,12 +50,10 @@ const Sidebar = ({ activeTab, setActiveTab, user, requestCount = 0 }) => {
           </div>
           <div className="user-details">
             <div className="user-name">{user?.name || 'User'}</div>
-            <div className="user-role" style={{ textTransform: 'capitalize' }}>
-              {user?.isStaff ? 'Staff Portal' : 'Student'}
-            </div>
+            <div className="user-role" style={{ textTransform: 'capitalize' }}>{user?.role || 'Student'}</div>
           </div>
         </div>
-        <button className="logout-btn">
+        <button className="logout-btn" onClick={onLogout}>
           <span className="logout-icon">Logout</span>
         </button>
       </div>

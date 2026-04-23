@@ -23,8 +23,6 @@ const Register = ({ onRegister, onBackToLogin }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Real-time validation for password fields
     if ((name === 'password' || name === 'confirmPassword')) {
       const updatedData = { ...formData, [name]: value };
       if (updatedData.password && updatedData.confirmPassword && updatedData.password !== updatedData.confirmPassword) {
@@ -36,7 +34,6 @@ const Register = ({ onRegister, onBackToLogin }) => {
   };
 
   const nextStep = () => {
-    // Validate passwords on step 1 before moving forward
     if (step === 1) {
       if (formData.password !== formData.confirmPassword) {
         setPasswordError('Passwords do not match');

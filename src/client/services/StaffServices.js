@@ -10,8 +10,11 @@ export const STATUS_CONFIG = {
 	processing: {
 		bg: '#F3EEFF', color: '#5B21B6', border: '1px solid #D4B8FF', dot: '#7C3AED', label: 'Processing',
 	},
+	ready: {
+		bg: '#EEF4FF', color: '#0D3B7A', border: '1px solid #B5D0F5', dot: '#0D3B7A', label: 'Ready for Pickup',
+	},
 	completed: {
-		bg: '#E6FAF3', color: '#1A6645', border: '1px solid #A3E6C9', dot: '#2E9966', label: 'Completed',
+		bg: '#E6FAF3', color: '#1A6645', border: '1px solid #A3E6C9', dot: '#2E9966', label: 'Delivered',
 	},
 	cancelled: {
 		bg: '#FFF0F0', color: '#9B1C1C', border: '1px solid #FCA5A5', dot: '#EF4444', label: 'Cancelled',
@@ -23,8 +26,8 @@ export const URGENCY_CONFIG = {
 	standard: { bg: '#f8fafc', color: '#475569', border: '1px solid #e2e8f0', label: 'Standard' },
 };
 
-export const TRACKER_STEPS = ['Pending', 'Verified', 'Processing', 'Completed'];
-export const TRACKER_ORDER = ['pending', 'verified', 'processing', 'completed'];
+export const TRACKER_STEPS = ['Pending', 'Processing', 'Ready', 'Delivered'];
+export const TRACKER_ORDER = ['pending', 'processing', 'ready', 'completed'];
 
 // 2. DASHBOARD KPI LOGIC
 /**
