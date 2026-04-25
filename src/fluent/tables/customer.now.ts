@@ -7,7 +7,6 @@ export const x_2001423_certireq_customer = Table({
     schema: {
         fullname: StringColumn({ label: 'Full Name', maxLength: 100, mandatory: true }),
         email: StringColumn({ label: 'University Email', maxLength: 100, mandatory: true }),
-        // --- ADDED THIS LINE ---
         password: StringColumn({ label: 'Password', maxLength: 128, mandatory: true }),
 
         contact_number: StringColumn({ label: 'Contact Number', maxLength: 20 }),

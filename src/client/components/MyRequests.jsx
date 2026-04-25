@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './myrequests.css'; 
 
 const STATUS_LABELS = {
@@ -22,6 +22,64 @@ function StatusBadge({ status }) {
   );
 }
 
+function RequestDetailsModal({ request, onClose }) {
+  if (!request) return null;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-container" style={{ maxWidth: '500px' }} onClick={e => e.stopPropagation()}>
+        <div style={{ padding: '20px 24px', background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#fff' }}>
+          <div>
+            <p style={{ fontSize: '11px', fontWeight: '700', opacity: 0.6, textTransform: 'uppercase', margin: '0 0 4px' }}>Request Details</p>
+            <h3 style={{ margin: 0, fontSize: '18px' }}>{request.number}</h3>
+          </div>
+          <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '32px', height: '32px', color: '#fff', cursor: 'pointer' }}>✕</button>
+        </div>
+        
+        <div style={{ padding: '24px', overflowY: 'auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
+            <div>
+              <p style={{ fontSize: '11px', fontWeight: '700', color: '#8A9BBE', textTransform: 'uppercase', margin: '0 0 6px' }}>Document Type</p>
+              <p style={{ fontSize: '14px', fontWeight: '600', color: '#0D2850', margin: 0 }}>{request.documentType}</p>
+            </div>
+            <div>
+              <p style={{ fontSize: '11px', fontWeight: '700', color: '#8A9BBE', textTransform: 'uppercase', margin: '0 0 6px' }}>Urgency</p>
+              <p style={{ fontSize: '14px', fontWeight: '600', color: '#0D2850', margin: 0 }}>{request.urgency || 'Standard'}</p>
+            </div>
+            <div>
+              <p style={{ fontSize: '11px', fontWeight: '700', color: '#8A9BBE', textTransform: 'uppercase', margin: '0 0 6px' }}>Status</p>
+              <StatusBadge status={request.status} />
+            </div>
+            <div>
+              <p style={{ fontSize: '11px', fontWeight: '700', color: '#8A9BBE', textTransform: 'uppercase', margin: '0 0 6px' }}>Delivery Mode</p>
+              <p style={{ fontSize: '14px', fontWeight: '600', color: '#0D2850', margin: 0 }}>{request.deliveryMode || 'Pickup'}</p>
+            </div>
+          </div>
+
+          <div style={{ background: '#F5F8FF', padding: '16px', borderRadius: '12px', marginBottom: '24px', border: '1px solid #E0E9F8' }}>
+            <p style={{ fontSize: '11px', fontWeight: '700', color: '#8A9BBE', textTransform: 'uppercase', margin: '0 0 8px' }}>Purpose of Request</p>
+            <p style={{ fontSize: '13.5px', color: '#3A506F', margin: 0, lineHeight: 1.5 }}>{request.purpose || 'No purpose specified.'}</p>
+          </div>
+
+          <div>
+            <p style={{ fontSize: '13px', fontWeight: '700', color: '#0D2850', margin: '0 0 12px' }}>Processing Progress</p>
+            <div style={{ height: '8px', background: '#E2E8F0', borderRadius: '10px', overflow: 'hidden', marginBottom: '8px' }}>
+              <div style={{ width: `${request.progress || 10}%`, height: '100%', background: 'linear-gradient(90deg, #0D3B7A, #3b82f6)', transition: 'width 0.5s ease' }} />
+            </div>
+            <p style={{ fontSize: '12px', color: '#6B80A3', margin: 0 }}>
+              Current stage: <strong style={{ color: '#0D3B7A' }}>{(request.status || 'Pending').toUpperCase()}</strong>
+            </p>
+          </div>
+        </div>
+
+        <div style={{ padding: '16px 24px', borderTop: '1px solid #EDF2F9', display: 'flex', justifyContent: 'flex-end', gap: '10px', background: '#F8FAFD' }}>
+          <button onClick={onClose} style={{ padding: '10px 20px', borderRadius: '10px', border: '1px solid #C5D7F5', background: '#fff', color: '#0D3B7A', fontWeight: '600', fontSize: '13px', cursor: 'pointer' }}>Close Details</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const getValue = (field) =>
   typeof field === 'object' ? (field.display_value ?? field.value) : field;
 
@@ -31,11 +89,12 @@ const formatDate = (dateField) => {
   return new Date(v).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 };
 
-export default function MyRequests({ requests, loading, service, onUpdate }) {
+export default function MyRequests({ requests, loading, onNewRequest, onRefresh }) {
+  const [selectedRequest, setSelectedRequest] = useState(null);
 
   const handleCancelRequest = async (request) => {
-    const sysId = typeof request.sys_id === 'object' ? request.sys_id.value : request.sys_id;
-    const status = typeof request.status === 'object' ? request.status.value : request.status;
+    const sysId = request.id; 
+    const status = request.status;
     
     if (status === 'completed' || status === 'cancelled') {
       alert('This request cannot be cancelled.');
@@ -44,8 +103,19 @@ export default function MyRequests({ requests, loading, service, onUpdate }) {
     
     if (confirm('Are you sure you want to cancel this request?')) {
       try {
-        await service.update(sysId, { status: 'cancelled' });
-        onUpdate();
+        const response = await fetch(`/api/now/table/x_2001423_certireq_document_request/${sysId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-UserToken': window.g_ck || ''
+          },
+          body: JSON.stringify({ status: 'cancelled' })
+        });
+
+        if (!response.ok) throw new Error('Failed to cancel request');
+        
+        onRefresh();
         alert('Request cancelled successfully.');
       } catch (error) {
         alert('Failed to cancel request: ' + error.message);
@@ -66,15 +136,11 @@ export default function MyRequests({ requests, loading, service, onUpdate }) {
 
   return (
     <div className="my-requests-page">
-      <div className="page-header">
-        <div>
-          <h1 className="page-title">My Requests</h1>
-          <p className="page-subtitle">View and manage your document requests</p>
-        </div>
-        <button className="new-request-btn">
+      <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+        {/* <button className="new-request-btn" onClick={onNewRequest}>
           <span style={{ fontSize: '16px', lineHeight: 1 }}>＋</span>
           New Request
-        </button>
+        </button> */}
       </div>
 
       <div className="request-card">
@@ -95,7 +161,7 @@ export default function MyRequests({ requests, loading, service, onUpdate }) {
             <p className="empty-desc">
               You haven't submitted any document requests. Start your first one now.
             </p>
-            <button className="empty-btn">
+            <button className="empty-btn" onClick={onNewRequest}>
               ＋ Submit a Request
             </button>
           </div>
@@ -111,12 +177,11 @@ export default function MyRequests({ requests, loading, service, onUpdate }) {
                     <th>Status</th>
                     <th>Urgency</th>
                     <th>Delivery</th>
-                    <th className="align-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {requests.map((request, index) => {
-                    const statusValue = request.status || 'unknown';
+                    const statusValue = (request.status || 'unknown').toLowerCase();
                     const canCancel = statusValue === 'pending';
                     const purposeText = request.purpose || '';
                     const docType = request.documentType || 'Unknown';
@@ -154,25 +219,6 @@ export default function MyRequests({ requests, loading, service, onUpdate }) {
                         <td className="muted-text">
                           {request.deliveryMode || '—'}
                         </td>
-
-                        <td className="align-right">
-                          <div className="actions-cell">
-                            <button
-                              className="btn-view"
-                              onClick={() => alert('View details functionality would be implemented here')}
-                            >
-                              View
-                            </button>
-                            {canCancel && (
-                              <button
-                                className="btn-cancel"
-                                onClick={() => handleCancelRequest(request)}
-                              >
-                                Cancel
-                              </button>
-                            )}
-                          </div>
-                        </td>
                       </tr>
                     );
                   })}
@@ -188,6 +234,13 @@ export default function MyRequests({ requests, loading, service, onUpdate }) {
           </>
         )}
       </div>
+
+      {selectedRequest && (
+        <RequestDetailsModal 
+          request={selectedRequest} 
+          onClose={() => setSelectedRequest(null)} 
+        />
+      )}
     </div>
   );
 }

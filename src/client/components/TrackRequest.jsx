@@ -399,7 +399,7 @@ export default function TrackRequest() {
 
           <div style={S.hintRow}>
             <IconInfo />
-            Your Request ID was sent to your email when you submitted the request.
+            Your Request ID was generated after you submit.
           </div>
 
           {error && (

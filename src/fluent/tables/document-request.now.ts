@@ -5,13 +5,11 @@ export const x_2001423_certireq_document_request = Table({
   name: 'x_2001423_certireq_document_request',
   label: 'Document Request',
   schema: {
-    // --- FOREIGN KEY LINKING TO THE UNIFIED CUSTOMER TABLE ---
     customer: ReferenceColumn({
       label: 'Customer',
       referenceTable: 'x_2001423_certireq_customer',
       mandatory: true
     }),
-    // ---------------------------------------------------------
 
     document_type: ChoiceColumn({
       label: 'Document Type',

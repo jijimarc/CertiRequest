@@ -15,6 +15,7 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogo
         </div>
       </div>
 
+      {/* Stats Grid */}
       <div className="stats-grid">
         <div className="stat-card total">
           <div className="stat-header">
@@ -57,12 +58,14 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogo
         <div className="stat-card payments">
           <div className="stat-header">
             <div>
-              <div className="stat-title">Total Payments</div>
+              <div className="stat-title">Pending Payments</div>
             </div>
             <div className="stat-icon">💳</div>
           </div>
-          <div className="stat-value">{stats?.payments?.value || '$0.00'}</div>
-          <div className="stat-change positive">
+          <div className="stat-value">{requests.filter(r => r.paymentStatus !== 'paid' && r.status !== 'cancelled').length}</div>
+          <div className="stat-change neutral">
+            <span className="change-icon">💳</span>
+            Awaiting payment
           </div>
         </div>
       </div>
@@ -70,35 +73,50 @@ const Dashboard = ({ requests = [], stats, onNewRequest, user, onRefresh, onLogo
       <div className="dashboard-grid">
         <div className="recent-requests">
           <div className="section-header">
-            <div>
-              <h3 className="section-title">Recent Requests</h3>
-              <p className="section-subtitle">Your latest document requests</p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+              <div>
+                <h3 className="section-title">Recent Requests</h3>
+                <p className="section-subtitle">Your latest document requests</p>
+              </div>
+              <button className="btn btn-secondary" onClick={() => onPay()} style={{ fontSize: '12px', padding: '6px 12px' }}>View All Payments</button>
             </div>
           </div>
 
           <div className="requests-list">
             {recentRequests.length > 0 ? (
-              recentRequests.map(request => (
-                <div key={request.id} className="request-item">
-                  <div className="request-icon">
-                    {request.documentType?.includes('Transcript') && '📄'}
-                    {request.documentType?.includes('Certificate') && '🎓'}
-                    {request.documentType?.includes('Verification') && '📋'}
-                  </div>
-                    <div className="request-info">
-                      <div className="request-title">{request.documentType}</div>
-                      <div className="request-meta">
-                        ID: <span style={{ fontWeight: 'bold', color: '#0D3B7A' }}>{request.number}</span> • Submitted on {request.dateSubmitted ? new Date(request.dateSubmitted).toLocaleDateString() : 'Pending'}
-                      </div>
+              recentRequests.map(request => {
+                const isUnpaid = request.paymentStatus !== 'paid' && request.status !== 'cancelled';
+                return (
+                  <div key={request.id} className="request-item" style={{ borderLeft: isUnpaid ? '4px solid #ef4444' : '4px solid transparent' }}>
+                    <div className="request-icon">
+                      {request.documentType?.includes('Transcript') && '📄'}
+                      {request.documentType?.includes('Certificate') && '🎓'}
+                      {request.documentType?.includes('Verification') && '📋'}
                     </div>
-                  <div className="request-status">
-                    <span className={`status-badge ${request.status}`}>
-                      <span className="status-indicator"></span>
-                      {request.status?.replace('_', ' ')}
-                    </span>
+                      <div className="request-info">
+                        <div className="request-title">{request.documentType}</div>
+                        <div className="request-meta">
+                          ID: <span style={{ fontWeight: 'bold', color: '#0D3B7A' }}>{request.number}</span> • Submitted {request.dateSubmitted ? new Date(request.dateSubmitted).toLocaleDateString() : 'Pending'}
+                        </div>
+                      </div>
+                    <div className="request-status" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      {isUnpaid && (
+                        <button 
+                          onClick={() => onPay()} 
+                          className="btn btn-primary" 
+                          style={{ padding: '6px 14px', fontSize: '12px', background: '#ef4444', border: 'none' }}
+                        >
+                          Pay Now
+                        </button>
+                      )}
+                      <span className={`status-badge ${request.status}`}>
+                        <span className="status-indicator"></span>
+                        {request.status?.replace('_', ' ')}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="empty-state">
                 <div className="empty-icon">📋</div>

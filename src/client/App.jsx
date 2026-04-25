@@ -34,20 +34,8 @@ function App() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        const savedSession = localStorage.getItem('certireq_user');
-        if (savedSession) {
-          const parsedUser = JSON.parse(savedSession);
-          setUser(parsedUser);
-          setView('app');
-          setActiveTab(parsedUser.isStaff ? 'staff-dashboard' : 'dashboard');
-          setLoading(false);
-          loadRequests(parsedUser);
-          return; 
-        }
-
         const userResponse = await fetch('/api/now/ui/userinfo', {
           headers: {
-            'Accept': 'application/json',
             'X-No-Response-Challenge': 'true'
           }
         });
@@ -60,7 +48,7 @@ function App() {
             email: userData.result.user_email,
             department: userData.result.user_department || 'General',
             avatar: null,
-            isStaff: true 
+            isStaff: true // If they have a ServiceNow session, they are likely staff
           });
           setView('app');
           setActiveTab('staff-dashboard');
@@ -69,24 +57,12 @@ function App() {
         console.warn('Could not fetch user info, using guest profile');
       } finally {
         setLoading(false);
-        if (!localStorage.getItem('certireq_user')) {
-          loadRequests();
-        }
+        loadRequests();
       }
     };
 
     initializeApp();
   }, []);
-
-  useEffect(() => {
-    if (view === 'app' && user?.id) {
-      const pollInterval = setInterval(() => {
-        loadRequests(user);
-      }, 10000); 
-
-      return () => clearInterval(pollInterval);
-    }
-  }, [view, user]);
 
   useEffect(() => {
     if (showNewRequestModal) {
@@ -149,6 +125,7 @@ function App() {
           purpose: getVal(record.purpose),
           deliveryMode: getVal(record.delivery_mode),
           urgency: getVal(record.urgency_level),
+          // Check multiple fields and ensure we get the raw value (e.g., 'paid')
           paymentStatus: (typeof record.payment_required === 'object' ? record.payment_required.value : record.payment_required) || 
                          (typeof record.payment_status === 'object' ? record.payment_status.value : record.payment_status) || 'pending',
           fee: parseFloat(getVal(record.payment_amount)) || 0,
@@ -245,6 +222,7 @@ function App() {
 
       if (!response.ok) throw new Error('Payment Update Failed');
       
+      // Update local state immediately for instant UI refresh
       setRequests(prev => prev.map(req => 
         req.id === requestId 
           ? { ...req, paymentStatus: 'paid', status: 'processing', progress: 50 } 
@@ -252,6 +230,8 @@ function App() {
       ));
       
       showToast('Payment confirmed! Processing started.', 'success');
+      
+      // Also trigger a background refresh to stay in sync with server
       loadRequests();
     } catch (error) {
       console.error('Payment Error:', error);
@@ -319,8 +299,13 @@ function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('certireq_user'); 
-    setUser({ id: '', name: '', email: '', department: '', avatar: null });
+    setUser({
+      id: '',
+      name: '',
+      email: '',
+      department: '',
+      avatar: null
+    });
     setView('login');
     setActiveTab('dashboard');
     setRequests([]);
@@ -329,11 +314,10 @@ function App() {
 
   const handleLogin = (userData) => {
     setUser(userData);
-    localStorage.setItem('certireq_user', JSON.stringify(userData));
     setView('app');
     
     if (userData.isStaff) {
-      setActiveTab('staff-dashboard'); 
+      setActiveTab('staff-dashboard');
       loadRequests(userData); 
     } else {
       setActiveTab('dashboard'); 
@@ -368,10 +352,16 @@ function App() {
             user={user}
             onRefresh={loadRequests}
             onLogout={handleLogout}
+            onPay={() => setActiveTab('payments')}
           />
         );
       case 'my-requests':
-        return <MyRequests requests={requests} onRefresh={loadRequests} showToast={showToast} />;
+        return <MyRequests 
+          requests={requests} 
+          onRefresh={() => loadRequests(user)} 
+          onNewRequest={() => setShowNewRequestModal(true)}
+          showToast={showToast} 
+        />;
       case 'track-request':
         return <TrackRequest requests={requests} />;
       case 'payments':
@@ -406,6 +396,7 @@ function App() {
         setActiveTab={setActiveTab}
         user={user}
         onLogout={handleLogout}
+        requestCount={requests.length}
       />
       
       <main className="main-content">
@@ -449,7 +440,6 @@ function App() {
                 </div>
                 <div className="user-info-text">
                   <span className="user-name-small">{user?.name}</span>
-                  <span className="user-role-small">{user?.isStaff ? 'Staff' : 'Student'}</span>
                 </div>
               </div>
             </div>

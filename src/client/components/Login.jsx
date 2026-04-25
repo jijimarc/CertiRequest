@@ -191,7 +191,7 @@ const Login = ({ onLogin, onGoToRegister }) => {
           <a href="#" className="help-link">Forgot your password?</a>
         </div>
 
-        <div style={{ marginTop: '2rem', textAlign: 'center', borderTop: '1px dashed #e2e8f0', paddingTop: '1.5rem' }}>
+        {/* <div style={{ marginTop: '2rem', textAlign: 'center', borderTop: '1px dashed #e2e8f0', paddingTop: '1.5rem' }}>
           <p style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '0.75rem' }}>Are you a Registrar employee?</p>
           <button 
             type="button" 
@@ -202,7 +202,7 @@ const Login = ({ onLogin, onGoToRegister }) => {
           >
             🔐 Staff Single Sign-On
           </button>
-        </div>
+        </div> */}
       </div>
 
       <div className="login-background">
